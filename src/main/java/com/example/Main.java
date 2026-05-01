@@ -1,20 +1,52 @@
 package com.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+public class Main {
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
+
+    public static void main(String[] args) {
+//        log.trace("Самая детальная информация (обычно не видна)");
+//        log.debug("Информация для отладки");
+//        log.info("Приложение запущено");
+//        log.warn("Что-то пошло не так, но мы справились");
+//        log.error("Произошла ошибка!", new RuntimeException("Тестовая ошибка"));
+        // TRACE - DEBUG - INFO - WARN - ERROR - FATAL
+//        UserService userService = new UserService();
+//        userService.createUser("admin", null);
+
+        log.info("Starting bank account");
+
+        BankAccount bankAccount = new BankAccount("Ivanov");
+
+        bankAccount.deposit(100.0);
+        bankAccount.deposit(1000.0);
+        bankAccount.deposit(500.5);
+        try {
+            bankAccount.withdraw(600.0);
+        } catch (Exception e) {
+            log.error("Operation not compete", e);
         }
-        // FIRST - TDD
-        // TRIPLE A -
-        // Single
+
+        try {
+            bankAccount.deposit(-600.0);
+        } catch (Exception e) {
+            log.error("Operation not compete", e);
+        }
+
+        try {
+            bankAccount.withdraw(-600.0);
+        } catch (Exception e) {
+            log.error("Operation not compete", e);
+        }
+        bankAccount.getBalance();
+        log.info("Ending bank account");
+        /*
+log.debug("User " + userId + " logged in");
+log.debug("User {} logged in", userId);
+log.info("User {} with email {} logged in at {}", userId, email, timestamp);
+log.error("Failed to process user {}", userId, exception);
+         */
     }
 }
