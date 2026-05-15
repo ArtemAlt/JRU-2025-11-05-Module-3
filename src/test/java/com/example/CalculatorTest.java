@@ -115,4 +115,20 @@ class CalculatorTest {
         assertEquals(expectedResult, result);
     }
 
+    static Stream<Arguments> addTestValues() {
+        return Stream.of(
+                Arguments.of(Integer.MAX_VALUE, 1, -Integer.MAX_VALUE - 1),
+                Arguments.of(1, 1, 2),
+                Arguments.of(-3, -2, -5),
+                Arguments.of(2, 0, 2)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("addTestValues")
+    void testAddMultiValue(int a, int b, int expectedResult) {
+        int result = calc.add(a, b);
+        assertEquals(expectedResult, result);
+    }
+
 }
