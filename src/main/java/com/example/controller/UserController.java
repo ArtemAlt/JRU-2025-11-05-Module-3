@@ -13,14 +13,14 @@ import java.io.IOException;
 @WebServlet("/user")
 public class UserController extends HttpServlet {
 
-    UserService userService = new UserService();
+//    UserService userService = new UserService();
     UserViewService userViewService = new UserViewService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
-        User userById = userService.findUserById(id);
-        userViewService.createView(userById, resp);
+//        User userById = userService.findUserById(id);
+//        userViewService.createView(userById, resp);
 
         /*
         repository
