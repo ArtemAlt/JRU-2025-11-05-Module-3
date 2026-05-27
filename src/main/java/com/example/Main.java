@@ -1,5 +1,17 @@
 package com.example;
 
+import com.example.obsertver.Bank;
+import com.example.obsertver.CurrencyExigence;
+import com.example.obsertver.Trader;
+import com.example.state.CoffeMachine;
+import com.example.stategy.CashPaymentStrategy;
+import com.example.stategy.CreditCardStrategy;
+import com.example.stategy.CryptoPaymentStrategy;
+import com.example.stategy.ShoppingCart;
+
+import java.util.Arrays;
+import java.util.List;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
@@ -73,5 +85,46 @@ public class Main {
 //        remoteControl.pressButton(2);
 //        remoteControl.pressButton(3);
 
+//        CurrencyExigence currencyExigence = new CurrencyExigence();
+//        Bank alfa = new Bank("Alfa");
+//        Bank sber = new Bank("Sber");
+//        Trader trader = new Trader();
+//
+//        currencyExigence.subscribe(alfa);
+//        currencyExigence.subscribe(sber);
+//        currencyExigence.subscribe(trader);
+//
+//        currencyExigence.setNewRange("EUR", 80);
+//        currencyExigence.setNewRange("USD", 71);
+
+//        CoffeMachine coffeMachine = new CoffeMachine();
+//
+//        coffeMachine.insertCoin();
+//        coffeMachine.insertCoin();
+//        coffeMachine.insertCoin();
+//        coffeMachine.selectCoffe();
+//        coffeMachine.dispense();
+//        ShoppingCart shoppingCart = new ShoppingCart();
+//        System.out.println("===Shopping=======");
+//        shoppingCart.payCart(3000);
+//        System.out.println("===Shopping Cash=======");
+//        shoppingCart.setPaymentStrategy(new CashPaymentStrategy());
+//        shoppingCart.payCart(3000);
+//        System.out.println("===Shopping Card======");
+//        ShoppingCart shoppingCart2 = new ShoppingCart();
+//        shoppingCart2.setPaymentStrategy(new CreditCardStrategy("4651654461"));
+//        shoppingCart2.payCart(3500);
+//        System.out.println("===Shopping Crypto======");
+//        ShoppingCart shoppingCart3 = new ShoppingCart();
+//        shoppingCart3.setPaymentStrategy(new CryptoPaymentStrategy("klfnbfgxkn"));
+//        shoppingCart3.payCart(3800);
+
+        /*
+        int STATUS_FINAL = 1
+        if (code == STATUS_FINAL){
+        } else {
+        }
+         */
     }
+
 }
