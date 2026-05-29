@@ -1,7 +1,7 @@
 package com.example.stategy;
 
 public class CreditCardStrategy implements PaymentStrategy {
-    private String cardNumber;
+    private int cardNumber;
 
     public CreditCardStrategy(int cardNumber) {
         this.cardNumber = cardNumber;

@@ -1,5 +1,7 @@
 package com.example;
 
+import com.example.mediator.ChatRoom;
+import com.example.mediator.ChatUser;
 import com.example.obsertver.Bank;
 import com.example.obsertver.CurrencyExigence;
 import com.example.obsertver.Trader;
@@ -9,6 +11,9 @@ import com.example.stategy.CreditCardStrategy;
 import com.example.stategy.CryptoPaymentStrategy;
 import com.example.stategy.ShoppingCart;
 
+import java.lang.ref.PhantomReference;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.List;
 
@@ -125,6 +130,38 @@ public class Main {
         } else {
         }
          */
+
+//        ChatRoom chatRoom = new ChatRoom();
+//        ChatUser sergey = new ChatUser("Sergey", chatRoom);
+//        ChatUser andrey = new ChatUser("Andrey", chatRoom);
+//        ChatUser ivan = new ChatUser("Ivan", chatRoom);
+//        ChatUser john = new ChatUser("John", chatRoom);
+//        System.out.println("=======Chat room===========");
+//        sergey.sendMessage("Hello everybody");
+//        andrey.sendMessage("Hi!!!!!");
+//        ivan.sendMessage("Hello");
+//        john.sendMessage("John is comming!!!!");
+        /*
+        counter = 0;
+         - 0
+         - 0+1
+         - 1
+         */
+        int x = 10;
+        String name = "name";
+        for (int i = 0; i < 100000000; i++) {
+
+        }
+        Object obj = new Object();
+        calc(1, 1, obj);
+        SoftReference<Object> ref = new SoftReference<>(obj);
+        WeakReference<Object> ref1 = new WeakReference<>(obj);
+    }
+
+    private static void calc(int i, int i1, Object obj) {
+        int result = 0;
+        result = i + i1;
+        System.out.println(result + obj.toString());
     }
 
 }
