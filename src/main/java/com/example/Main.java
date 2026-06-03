@@ -1,26 +1,16 @@
 package com.example;
 
-import com.example.mediator.ChatRoom;
-import com.example.mediator.ChatUser;
-import com.example.obsertver.Bank;
-import com.example.obsertver.CurrencyExigence;
-import com.example.obsertver.Trader;
-import com.example.state.CoffeMachine;
-import com.example.stategy.CashPaymentStrategy;
-import com.example.stategy.CreditCardStrategy;
-import com.example.stategy.CryptoPaymentStrategy;
-import com.example.stategy.ShoppingCart;
-
-import java.lang.ref.PhantomReference;
-import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
-import java.util.Arrays;
-import java.util.List;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) throws CloneNotSupportedException {
+    public static void main(String[] args) throws CloneNotSupportedException, ExecutionException, InterruptedException {
 //        ServiceLocator.register(DiscountService.class, new DiscountService());
 //        ServiceLocator.register(EmailService.class, new EmailService());
 //        ServiceLocator.register(DiscountService.class, new DiscountService());
@@ -147,15 +137,37 @@ public class Main {
          - 0+1
          - 1
          */
-        int x = 10;
-        String name = "name";
-        for (int i = 0; i < 100000000; i++) {
+//        int x = 10;
+//        String name = "name";
+//        for (int i = 0; i < 100000000; i++) {
+//
+//        }
+//        Object obj = new Object();
+//        calc(1, 1, obj);
+//        SoftReference<Object> ref = new SoftReference<>(obj);
+//        WeakReference<Object> ref1 = new WeakReference<>(obj);
+//        AtomicInteger counter = new AtomicInteger(0);
+//        ConcurrentHashMap map = new ConcurrentHashMap();
+//        ConcurrentLinkedQueue<Bank> banks = new ConcurrentLinkedQueue<>();
+//        ReentrantLock lock = new ReentrantLock();
+//        Semaphore semaphore = new Semaphore(1);
+//        ExecutorService executorService = Executors.newFixedThreadPool(10);
+//        ExecutorService executorService = Executors.newFixedThreadPool(5);
+//        CompletionService service = new ExecutorCompletionService(executorService);
+//
+//        for (int i = 1; i <= 5; i++) {
+//            int id = i;
+//            service.submit(() -> {
+//                Thread.sleep(10000/id);
+//                return "Result " + id;
+//            });
+//        }
+//        for (int i = 0; i < 5; i++) {
+//            Future take = service.take();
+//            System.out.println(take.get());
+//        }
+//        executorService.shutdown();
 
-        }
-        Object obj = new Object();
-        calc(1, 1, obj);
-        SoftReference<Object> ref = new SoftReference<>(obj);
-        WeakReference<Object> ref1 = new WeakReference<>(obj);
     }
 
     private static void calc(int i, int i1, Object obj) {
@@ -163,5 +175,4 @@ public class Main {
         result = i + i1;
         System.out.println(result + obj.toString());
     }
-
 }
