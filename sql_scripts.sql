@@ -301,3 +301,104 @@ select count(students.first_name) from students;
 select count(students.phone) from students;
 
 select students.city, count(*) as total from students group by city;
+
+select * from students where age > 20;
+
+select students.city, count(*) as total from students group by city HAVING count(*) > 2;
+/*
+ WHERE
+ GROUP BY
+ HAVING
+ ORDER BY LIMIT
+ */
+select count(id) from students;
+select count(id) from courses;
+
+SELECT s.first_name, s.last_name, e.grade
+FROM students s, enrollments e
+WHERE s.id = e.student_id;
+/*
+ Nested Loop  (cost=13.01..31.69 rows=77 width=634)
+ */
+
+SELECT s.first_name, s.last_name,s.phone, e.grade, c.title, t.first_name
+FROM students s
+         INNER JOIN enrollments e ON s.id = e.student_id
+         INNER JOIN courses c ON e.course_id = c.id
+         INNER JOIN teachers t ON e.teacher_id = t.id;
+
+SELECT s.first_name, s.last_name,s.phone, e.grade, c.title
+FROM students s, enrollments e, courses c
+WHERE s.id = e.student_id and e.course_id = c.id;
+
+INSERT INTO students (first_name, last_name, age, email, phone, city) VALUES
+                                                                          ('Аркадий', 'Паровозов', 20, 'arkadiy.parovozov@example.com', '+7-999-111-22-33', 'Москва'),
+                                                                          ('Зинаида', 'Петрова', 19, 'zinaida.petrova@example.com', '+7-999-222-33-44', 'Санкт-Петербург'),
+                                                                          ('Фёдор', 'Сумкин', 21, 'fyodor.sumkin@example.com', NULL, 'Казань');
+
+INSERT INTO enrollments (student_id, course_id, teacher_id, enrollment_date, grade) VALUES
+                                                                                        (31, 1, 1, '2024-01-15', 4),
+                                                                                        (32, 5, 3, '2024-01-15', 5),
+                                                                                        (1, 6, 4, '2024-01-15', 3),
+                                                                                        (2, 2, 1, '2024-01-15', 4);
+
+
+
+SELECT
+    s.first_name,
+    s.last_name,
+    COALESCE(e.grade::text, 'Нет оценки') AS grade
+FROM students s
+         LEFT JOIN enrollments e ON s.id = e.student_id
+ORDER BY e.grade DESC NULLS LAST;
+
+/*
+ WHERE
+ GROUP BY
+ HAVING
+ ORDER BY LIMIT
+ */
+
+SELECT
+    t.first_name || ' ' || t.last_name AS teacher,
+    s.first_name || ' ' || s.last_name AS student,
+    c.title AS course,
+    e.grade
+FROM teachers t
+         LEFT JOIN enrollments e ON t.id = e.teacher_id
+         LEFT JOIN students s ON e.student_id = s.id
+         LEFT JOIN courses c ON e.course_id = c.id
+ORDER BY t.last_name, e.grade DESC NULLS LAST;
+
+SELECT
+    c.title,
+    COUNT(e.student_id) AS student_count,
+    coalesce(AVG(e.grade) , 0.0) AS avg_grade
+FROM courses c
+         LEFT JOIN enrollments e ON c.id = e.course_id
+GROUP BY c.id, c.title
+ORDER BY student_count DESC;
+
+SELECT avg(students.age) from students;
+
+select students.first_name, students.last_name, students.age from students where age > (SELECT avg(students.age) from students);
+
+SELECT course_stats.course_title, course_stats.avg_grade
+FROM (
+         SELECT
+             c.title AS course_title,
+             AVG(e.grade) AS avg_grade
+         FROM courses c
+                  JOIN enrollments e ON c.id = e.course_id
+         GROUP BY c.id, c.title
+     ) AS course_stats
+WHERE course_stats.avg_grade > 4.0
+ORDER BY course_stats.avg_grade DESC;
+
+SELECT first_name, last_name
+FROM students s
+WHERE EXISTS (
+    SELECT 465465654654
+    FROM enrollments e
+    WHERE e.student_id = s.id
+);
