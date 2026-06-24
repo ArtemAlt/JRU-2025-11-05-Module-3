@@ -402,3 +402,103 @@ WHERE EXISTS (
     FROM enrollments e
     WHERE e.student_id = s.id
 );
+
+
+select students.first_name, students.last_name, students.age from students
+where age > (select avg(age) from students);
+
+select first_name, last_name from students st where
+exists (select 1 from enrollments e where st.id = e.student_id);
+
+select first_name, last_name from students st
+where id IN (select student_id from enrollments);
+
+-- CTE --
+WITH name_cte AS (
+    select * from students
+)
+select name_cte.first_name from name_cte;
+
+with avr_grade as (
+    select avg(grade) as avr_global from enrollments
+)
+select st.first_name, st.last_name, avg(e.grade) from students st
+join enrollments e on st.id = e.student_id
+group by st.id, st.first_name, st.last_name
+having avg(e.grade) > (select avr_global from avr_grade);
+
+-- € хочу получить фамилию им€ студента с оценками и количеством преподавателей
+-- этого студента студент учитель курс оценка если учитель на двух предметах - средн€€ оценка предметов
+
+select students.first_name, students.last_name, students.age,
+       students.age + 10 as age_10, students.age *2 as double from students;
+
+SELECT
+    title,
+    courses.credits,
+    ROUND(credits * 1.0 / 2, 2) AS half_credits,
+    FLOOR(credits / 2.0) AS floor_credits,
+    CEIL(credits / 2.0) AS ceil_credits,
+    ABS(credits - 4) AS diff_from_4
+FROM courses
+LIMIT 10;
+
+SELECT
+    COUNT(*) AS total,
+    AVG(age) AS avg_age,
+    MIN(age) AS min_age,
+    MAX(age) AS max_age,
+    SUM(age) AS sum_ages
+FROM students;
+
+SELECT
+    enrollment_date,
+    enrollment_date + INTERVAL '1 year' AS year_later,
+    enrollment_date - INTERVAL '6 months' AS six_months_before,
+    enrollment_date + INTERVAL '7 days' AS week_later
+FROM enrollments
+LIMIT 10;
+
+SELECT
+    enrollment_date,
+    TO_CHAR(enrollment_date, 'DD.MM.YYYY') AS date_ru,
+    TO_CHAR(enrollment_date, 'Month DD, YYYY') AS date_us,
+    TO_CHAR(enrollment_date, 'Day, DD Mon YYYY') AS long_date
+FROM enrollments
+LIMIT 10;
+
+select * from students where id = 1;
+update students set age = 21 where id = 1;
+update students set email = 'ivan.petrov@example.net' , city= 'ѕермь' where email = 'ivan.petrov@example.ru';
+
+WITH updated_avg AS (
+    SELECT student_id, AVG(grade) AS avg_grade
+    FROM enrollments
+    GROUP BY student_id
+)
+UPDATE students
+SET age = age + 1
+FROM updated_avg
+WHERE students.id = updated_avg.student_id
+  AND updated_avg.avg_grade > 4.5;
+
+DELETE FROM students where id = 32;
+
+select * from enrollments where student_id = 32;
+
+alter table students add column birth_date  date not null default now();
+alter table students drop column birth_date;
+
+alter table students alter column last_name type varchar(100);
+alter table students rename column last_name TO last_name_2;
+
+
+
+
+
+
+
+
+
+
+
