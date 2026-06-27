@@ -492,6 +492,109 @@ alter table students drop column birth_date;
 alter table students alter column last_name type varchar(100);
 alter table students rename column last_name TO last_name_2;
 
+-- DDL(CREATE ALTER DROP TRUNCATE) DML (SELECT INSERT UPDATE DELETE)
+-- DCL (GRANT REVOKE DENY) TCL (COMMIT ROLlBACK SAVEPOINT)
+
+INSERT INTO students (first_name, last_name, age, email, phone, city) VALUES
+('Аркадий2', 'Паровозов2', 21, 'arkadiy2.parovozov@example.com', '+7-999-111-22-33', 'Москва')
+returning id;
+
+CREATE OR REPLACE FUNCTION before_student_insert()
+    RETURNS TRIGGER AS $$
+BEGIN
+    -- Если created_at не указан, ставим текущую дату
+    IF NEW.created_at IS NULL THEN
+        NEW.created_at = CURRENT_TIMESTAMP;
+    END IF;
+
+    -- Если возраст меньше 16, выбрасываем ошибку
+    IF NEW.age < 16 THEN
+        RAISE EXCEPTION 'Возраст студента не может быть меньше 16 лет';
+    END IF;
+
+    -- Возвращаем обновлённую строку
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TABLE students_backup AS TABLE students WITH NO DATA;
+
+-- Копирование студентов из Москвы с изменением email
+INSERT INTO students_backup (first_name, last_name, age, email, city)
+SELECT
+    first_name,
+    last_name,
+    age,
+    LOWER(CONCAT(first_name, '.', last_name, '@example.com')) AS email,
+    city
+FROM students
+WHERE city = 'Москва';
+
+UPDATE students
+SET email = LOWER(CONCAT(first_name, '.', last_name, '@university.edu'))
+WHERE email IS NULL;
+
+BEGIN;
+select * from students WHERE city = 'Москва';
+UPDATE  students set age = age +1 WHERE city = 'Москва';
+insert into enrollments (student_id, course_id, teacher_id, grade)
+VALUES (31,1,1,5);
+select * from students WHERE city = 'Москва';
+commit;
+rollback;
+
+BEGIN;
+--INSERT INTO students SET age = age + 1 WHERE city = 'Москва';
+UPDATE students SET age = age + 1 WHERE city = 'Москва';
+-- Точка сохранения
+SAVEPOINT before_insert;
+INSERT INTO enrollments (student_id, course_id, teacher_id, grade)
+VALUES (999, 1, 1, 5);  -- Ошибка! Student 999 не существует
+-- Откат только до точки сохранения
+ROLLBACK TO SAVEPOINT before_insert;
+-- Теперь можно сделать другой INSERT
+INSERT INTO enrollments (student_id, course_id, teacher_id, grade)
+VALUES (31, 1, 1, 5);
+COMMIT;
+
+
+BEGIN;
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+SELECT * FROM students;
+COMMIT;
+
+explain analyse select * from students where age = 20;
+create index on students(age);
+--create index on students(email) using hash;
+select * from students where email like '%com';
+select * from students order by age;
+--Seq Scan on students  (cost=0.00..11.25 rows=1 width=746) (actual time=0.016..0.020 rows=8 loops=1)
+--Filter: (age = 20)
+  --Rows Removed by Filter: 25
+--Planning Time: 0.079 ms
+--Execution Time: 0.046 ms
+
+create index on students (city, age, first_name);
+SELECT * FROM students WHERE city = 'Москва' AND age = 20 AND first_name = 'Иван';
+SELECT * FROM students WHERE city = 'Москва' AND age = 20;
+SELECT * FROM students WHERE city = 'Москва';
+SELECT * FROM students WHERE age = 20;
+
+
+update students set age = age + 1
+where exists(select * from grades where grades.student_id = students.id and grade in (4,5));
+
+select students.first_name, students.last_name, age from students
+where exists(
+select * from grades where grades.student_id = students.id and grade in (4,5));
+
+select distinct s.id, s.first_name, s.last_name from students s
+join enrollments e on s.id = e.student_id where e.grade in (4,5);
+
+select count(id) from students;
+
+
+
 
 
 
