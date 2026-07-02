@@ -1,5 +1,14 @@
 package com.example;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -167,6 +176,68 @@ public class Main {
 //            System.out.println(take.get());
 //        }
 //        executorService.shutdown();
+        String url = "jdbc:postgresql://localhost:5432/postgres";
+        String user = "user";
+        String password = "password";
+        String sqlInsert = "INSERT INTO students (first_name, last_name, age, email, phone, city) VALUES\n" +
+                "           ('Василий', 'Тепловозов', 28, 'vasya.parovozov@example.com', '+7-999-111-22-33', 'Москва');";
+
+        String sqlSelect = "SELECT * FROM students where first_name = ";
+        String sqlName = "'Василий'";
+
+//        String sqlPr = "SELECT id, first_name, last_name, age, created_at FROM students WHERE city = ? AND age > ?";
+        String sqlBatch = "INSERT INTO students (first_name, last_name, age, email, city) VALUES (?, ?, ?, ?, ?)";
+//        String sqlPr = "SELECT * FROM students limit 10";
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+//            Statement stmt = conn.createStatement();
+            PreparedStatement pstmt = conn.prepareStatement(sqlBatch);
+//            pstmt.setString(1, "Москва");
+//            pstmt.setInt(2, 22);
+//            ResultSet rs = pstmt.executeQuery();
+//            ResultSet rs = stmt.executeQuery("SELECT * FROM students limit 5");
+//            int i = stmt.executeUpdate(sqlInsert);
+//            System.out.printf("Inserted %d rows into database\n", i);
+//            ResultSet rs = stmt.executeQuery(sqlSelect + sqlName);
+
+//            stmt.execute("CREATE TABLE students ");
+            conn.setAutoCommit(false);
+            Object[][] students = {
+                    {"Алексей", "Иванов", 20, "alex11@example.com", "Москва"},
+                    {"Мария", "Петрова", 19, "maria11@example.com", "СПб"},
+                    {"Дмитрий", "Сидоров", 21, "dmitry111@example.com", "Казань"}
+            };
+
+            for (Object[] student : students) {
+                pstmt.setString(1, (String) student[0]);
+                pstmt.setString(2, (String) student[1]);
+                pstmt.setInt(3, (Integer) student[2]);
+                pstmt.setString(4, (String) student[3]);
+                pstmt.setString(5, (String) student[4]);
+                pstmt.addBatch();
+            }
+
+            int[] i = pstmt.executeBatch();
+            pstmt.clearBatch();
+            conn.commit();
+//            ResultSet rs = pstmt.executeQuery();
+
+            System.out.println("Insert rows: " + i.length);
+            System.out.println(Arrays.toString(i));
+
+//            while (rs.next()) {
+//                int id = rs.getInt("id");
+//                String firstName = rs.getString("first_name");
+//                String lastName = rs.getString("last_name");
+//                int age = rs.getInt("age");
+//                LocalDateTime createdAt = rs.getObject("created_at", LocalDateTime.class);
+//                System.out.printf("%s | %s | %s | %d | %s%n", id, firstName, lastName, age, createdAt);
+//            }
+
+            System.out.printf("Connected to PostgreSQL database\n");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
