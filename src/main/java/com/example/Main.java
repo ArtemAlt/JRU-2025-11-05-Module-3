@@ -1,249 +1,304 @@
 package com.example;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.json.JSONObject;
+
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.FilteredRowSet;
+import javax.sql.rowset.JdbcRowSet;
+import javax.sql.rowset.RowSetFactory;
+import javax.sql.rowset.RowSetProvider;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) throws CloneNotSupportedException, ExecutionException, InterruptedException {
-//        ServiceLocator.register(DiscountService.class, new DiscountService());
-//        ServiceLocator.register(EmailService.class, new EmailService());
-//        ServiceLocator.register(DiscountService.class, new DiscountService());
-
-
-        // FIRST - TDD
-        // TRIPLE A -
-        // Single
-
-//        GameCharacter one = new GameCharacter("Base", 10);
-//        one.addSkill("Fireball");
-//        one.showInfo();
-//        System.out.println("==============");
-//        GameCharacter two = one.clone();
-//        two.setName("Dolphin");
-//        two.addSkill("Strong");
-//        two.addSkill("Swim");
-//        two.showInfo();
-//        System.out.println("==============");
-//        GameCharacter three = one.clone();
-//        three.setName("Dog");
-//        three.addSkill("Bark");
-//        three.showInfo();
-//        System.out.println("==============");
-//        Pizza margarita = new Margarita();
-//        Pizza fourCheeze = new FourCheeze();
-//        System.out.println(margarita.getDescription() + margarita.getPrice());
-//        System.out.println(fourCheeze.getDescription() + fourCheeze.getPrice());
-//        System.out.println("===================");
-//        Pizza newMargarita = new PizzaMushroomDecorator(margarita);
-//        System.out.println(newMargarita.getDescription() + newMargarita.getPrice());
-//
-//        System.out.println("====================");
-//        Pizza newFourCheeze = new PizzaMushroomDecorator(new PizzaMushroomDecorator(fourCheeze));
-//        System.out.println(newFourCheeze.getDescription() + newFourCheeze.getPrice());
-//GoF
-
-//        SupportHandler1Level support1 = new SupportHandler1Level();
-//        SupportHandler2Level support2 = new SupportHandler2Level();
-//        SupportHandlerLevel3 support3 = new SupportHandlerLevel3();
-//        support1.setNext(support2);
-//        support2.setNext(support3);
-//
-//        SupportRequest[] requests = {
-//                new SupportRequest("Как сменить пароль?", 1),
-//                new SupportRequest("Не открывается сайт", 1),
-//                new SupportRequest("Программа зависла при запуске", 2),
-//                new SupportRequest("Ошибка 500 на сервере", 3),
-//                new SupportRequest("Сгорел сервер в дата-центре", 4)
-//        };
-//
-//        for (SupportRequest request : requests) {
-//            System.out.println("\n📞 Новый запрос: " + request.getIssue());
-//            support1.handle(request);
-//        }
-
-//        Light light = new Light("Living Room");
-//        MusicCenter musicCenter = new MusicCenter();
-//        LighCommand lighCommand = new LighCommand(light);
-//        MusicCenterCommand musicCenterCommand = new MusicCenterCommand(musicCenter);
-//        RemoteControl remoteControl = new RemoteControl();
-//        remoteControl.setCommand(lighCommand, 0);
-//        remoteControl.setCommand(musicCenterCommand, 3);
-//        System.out.println("================");
-//        remoteControl.pressButton(0);
-//        remoteControl.pressButton(1);
-//        remoteControl.pressButton(2);
-//        remoteControl.pressButton(3);
-
-//        CurrencyExigence currencyExigence = new CurrencyExigence();
-//        Bank alfa = new Bank("Alfa");
-//        Bank sber = new Bank("Sber");
-//        Trader trader = new Trader();
-//
-//        currencyExigence.subscribe(alfa);
-//        currencyExigence.subscribe(sber);
-//        currencyExigence.subscribe(trader);
-//
-//        currencyExigence.setNewRange("EUR", 80);
-//        currencyExigence.setNewRange("USD", 71);
-
-//        CoffeMachine coffeMachine = new CoffeMachine();
-//
-//        coffeMachine.insertCoin();
-//        coffeMachine.insertCoin();
-//        coffeMachine.insertCoin();
-//        coffeMachine.selectCoffe();
-//        coffeMachine.dispense();
-//        ShoppingCart shoppingCart = new ShoppingCart();
-//        System.out.println("===Shopping=======");
-//        shoppingCart.payCart(3000);
-//        System.out.println("===Shopping Cash=======");
-//        shoppingCart.setPaymentStrategy(new CashPaymentStrategy());
-//        shoppingCart.payCart(3000);
-//        System.out.println("===Shopping Card======");
-//        ShoppingCart shoppingCart2 = new ShoppingCart();
-//        shoppingCart2.setPaymentStrategy(new CreditCardStrategy("4651654461"));
-//        shoppingCart2.payCart(3500);
-//        System.out.println("===Shopping Crypto======");
-//        ShoppingCart shoppingCart3 = new ShoppingCart();
-//        shoppingCart3.setPaymentStrategy(new CryptoPaymentStrategy("klfnbfgxkn"));
-//        shoppingCart3.payCart(3800);
-
-        /*
-        int STATUS_FINAL = 1
-        if (code == STATUS_FINAL){
-        } else {
-        }
-         */
-
-//        ChatRoom chatRoom = new ChatRoom();
-//        ChatUser sergey = new ChatUser("Sergey", chatRoom);
-//        ChatUser andrey = new ChatUser("Andrey", chatRoom);
-//        ChatUser ivan = new ChatUser("Ivan", chatRoom);
-//        ChatUser john = new ChatUser("John", chatRoom);
-//        System.out.println("=======Chat room===========");
-//        sergey.sendMessage("Hello everybody");
-//        andrey.sendMessage("Hi!!!!!");
-//        ivan.sendMessage("Hello");
-//        john.sendMessage("John is comming!!!!");
-        /*
-        counter = 0;
-         - 0
-         - 0+1
-         - 1
-         */
-//        int x = 10;
-//        String name = "name";
-//        for (int i = 0; i < 100000000; i++) {
-//
-//        }
-//        Object obj = new Object();
-//        calc(1, 1, obj);
-//        SoftReference<Object> ref = new SoftReference<>(obj);
-//        WeakReference<Object> ref1 = new WeakReference<>(obj);
-//        AtomicInteger counter = new AtomicInteger(0);
-//        ConcurrentHashMap map = new ConcurrentHashMap();
-//        ConcurrentLinkedQueue<Bank> banks = new ConcurrentLinkedQueue<>();
-//        ReentrantLock lock = new ReentrantLock();
-//        Semaphore semaphore = new Semaphore(1);
-//        ExecutorService executorService = Executors.newFixedThreadPool(10);
-//        ExecutorService executorService = Executors.newFixedThreadPool(5);
-//        CompletionService service = new ExecutorCompletionService(executorService);
-//
-//        for (int i = 1; i <= 5; i++) {
-//            int id = i;
-//            service.submit(() -> {
-//                Thread.sleep(10000/id);
-//                return "Result " + id;
-//            });
-//        }
-//        for (int i = 0; i < 5; i++) {
-//            Future take = service.take();
-//            System.out.println(take.get());
-//        }
-//        executorService.shutdown();
+    public static void main(String[] args) throws SQLException {
         String url = "jdbc:postgresql://localhost:5432/postgres";
         String user = "user";
         String password = "password";
-        String sqlInsert = "INSERT INTO students (first_name, last_name, age, email, phone, city) VALUES\n" +
-                "           ('Василий', 'Тепловозов', 28, 'vasya.parovozov@example.com', '+7-999-111-22-33', 'Москва');";
 
-        String sqlSelect = "SELECT * FROM students where first_name = ";
-        String sqlName = "'Василий'";
+//        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+//            // Отключаем AutoCommit
+//            conn.setAutoCommit(false);
+//            System.out.println("AutoCommit: " + conn.getAutoCommit());  // false
+//
+//            try {
+//                // Операция 1: обновляем студентов
+//                String sql1 = "UPDATE students SET age = age + 1 WHERE city = 'Москва'";
+//                try (Statement stmt = conn.createStatement()) {
+//                    int rows = stmt.executeUpdate(sql1);
+//                    System.out.println("Обновлено студентов в Москве: " + rows);
+//                }
+//
+//                // Операция 2: добавляем запись на курс
+//                String sql2 = "INSERT INTO enrollments (student_id, course_id, teacher_id, grade) VALUES (?, ?, ?, ?)";
+//                try (PreparedStatement pstmt = conn.prepareStatement(sql2)) {
+//                    pstmt.setInt(1, 1);
+//                    pstmt.setInt(2, 1);
+//                    pstmt.setInt(3, 1);
+//                    pstmt.setInt(4, 5);
+//                    pstmt.executeUpdate();
+//                    System.out.println("Добавлена запись на курс");
+//                }
+//
+//                // Если всё хорошо — подтверждаем
+//                conn.commit();
+//                System.out.println("✅ Транзакция успешно выполнена!");
+//
+//            } catch (SQLException e) {
+//                // Если ошибка — откатываем всё
+//                conn.rollback();
+//                System.err.println("❌ Транзакция откачена: " + e.getMessage());
+//            } finally {
+//           conn.setAutoCommit(true);}
+//        }
 
-//        String sqlPr = "SELECT id, first_name, last_name, age, created_at FROM students WHERE city = ? AND age > ?";
-        String sqlBatch = "INSERT INTO students (first_name, last_name, age, email, city) VALUES (?, ?, ?, ?, ?)";
-//        String sqlPr = "SELECT * FROM students limit 10";
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-//            Statement stmt = conn.createStatement();
-            PreparedStatement pstmt = conn.prepareStatement(sqlBatch);
-//            pstmt.setString(1, "Москва");
-//            pstmt.setInt(2, 22);
-//            ResultSet rs = pstmt.executeQuery();
-//            ResultSet rs = stmt.executeQuery("SELECT * FROM students limit 5");
-//            int i = stmt.executeUpdate(sqlInsert);
-//            System.out.printf("Inserted %d rows into database\n", i);
-//            ResultSet rs = stmt.executeQuery(sqlSelect + sqlName);
-
-//            stmt.execute("CREATE TABLE students ");
-            conn.setAutoCommit(false);
-            Object[][] students = {
-                    {"Алексей", "Иванов", 20, "alex11@example.com", "Москва"},
-                    {"Мария", "Петрова", 19, "maria11@example.com", "СПб"},
-                    {"Дмитрий", "Сидоров", 21, "dmitry111@example.com", "Казань"}
-            };
-
-            for (Object[] student : students) {
-                pstmt.setString(1, (String) student[0]);
-                pstmt.setString(2, (String) student[1]);
-                pstmt.setInt(3, (Integer) student[2]);
-                pstmt.setString(4, (String) student[3]);
-                pstmt.setString(5, (String) student[4]);
-                pstmt.addBatch();
-            }
-
-            int[] i = pstmt.executeBatch();
-            pstmt.clearBatch();
-            conn.commit();
-//            ResultSet rs = pstmt.executeQuery();
-
-            System.out.println("Insert rows: " + i.length);
-            System.out.println(Arrays.toString(i));
-
-//            while (rs.next()) {
-//                int id = rs.getInt("id");
-//                String firstName = rs.getString("first_name");
-//                String lastName = rs.getString("last_name");
-//                int age = rs.getInt("age");
-//                LocalDateTime createdAt = rs.getObject("created_at", LocalDateTime.class);
-//                System.out.printf("%s | %s | %s | %d | %s%n", id, firstName, lastName, age, createdAt);
+//        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+//            conn.setAutoCommit(false);
+//
+//            Savepoint sp2 = null;
+//            try {
+//                // Шаг 1: обновляем студентов из Москвы
+//                String sql1 = "UPDATE students SET age = age + 1 WHERE city = 'Москва'";
+//                try (Statement stmt = conn.createStatement()) {
+//                    int rows = stmt.executeUpdate(sql1);
+//                    System.out.println("1. Обновлено студентов в Москве: " + rows);
+//                }
+//
+//                // Точка сохранения №1
+//                Savepoint sp1 = conn.setSavepoint("after_moscow_update");
+//                System.out.println("📌 Точка сохранения: after_moscow_update");
+//
+//                // Шаг 2: обновляем студентов из Казани
+//                String sql2 = "UPDATE students SET age = age + 1 WHERE city = 'Казань'";
+//                try (Statement stmt = conn.createStatement()) {
+//                    int rows = stmt.executeUpdate(sql2);
+//                    System.out.println("2. Обновлено студентов в Казани: " + rows);
+//                }
+//
+//                // Точка сохранения №2
+//                sp2 = conn.setSavepoint("after_kazan_update");
+//                System.out.println("📌 Точка сохранения: after_kazan_update");
+//
+//                // Шаг 3: добавляем нового студента (может вызвать ошибку)
+//                String sql3 = "INSERT INTO students (first_name, last_name, age, email, city) VALUES (?, ?, ?, ?, ?)";
+//                try (PreparedStatement pstmt = conn.prepareStatement(sql3)) {
+//                    pstmt.setString(1, "Тестовый");
+//                    pstmt.setString(2, "Студент");
+//                    pstmt.setInt(3, 20);
+//                    pstmt.setString(4, "test@example.com");
+//                    pstmt.setString(5, "Москва");
+//                    pstmt.executeUpdate();
+//                    System.out.println("3. Добавлен новый студент");
+//                }
+//
+//                // Всё хорошо — коммит
+//                conn.commit();
+//                System.out.println("✅ Транзакция успешно выполнена!");
+//
+//            } catch (SQLException e) {
+//                System.err.println("❌ Ошибка: " + e.getMessage());
+//
+//                // Откатываемся к точке after_kazan_update
+//                // (отменяем только добавление студента, но сохраняем обновления возрастов)
+//                conn.rollback(sp2);
+//                conn.commit();
+//                System.out.println("↩️ Откат до savepoint 'after_kazan_update'");
+//                System.out.println("✅ Изменения возрастов сохранены");
+//
+//            } finally {
+//                conn.setAutoCommit(true);
 //            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
-            System.out.printf("Connected to PostgreSQL database\n");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Connection conn = DriverManager.getConnection(url, user, password);
+//            File photo = new File("photo.jpg");
+//            PreparedStatement ps = conn.prepareStatement("insert into photo (filename) values (?)");
+//            try (FileInputStream fis = new FileInputStream(photo)){
+//                ps.setBinaryStream(1, fis);
+//            } catch (FileNotFoundException e) {
+//                throw new RuntimeException(e);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        String sql = "SELECT student_id, photo, photo_name FROM student_photos WHERE student_id = ?";
+//        try (Connection conn = DriverManager.getConnection(url, user, password);
+//             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//
+//            pstmt.setInt(1, 1);
+//
+//            try (ResultSet rs = pstmt.executeQuery()) {
+//                if (rs.next()) {
+//                    String photoName = rs.getString("photo_name");
+//                    byte[] photoData = rs.getBytes("photo");
+//
+//                    System.out.println("📸 Фото: " + photoName);
+//                    System.out.println("   Размер: " + photoData.length + " байт");
+//
+//                    // Сохраняем в файл
+//                    try (FileOutputStream fos = new FileOutputStream("downloaded_" + photoName)) {
+//                        fos.write(photoData);
+//                        System.out.println("✅ Фото сохранено в файл");
+//                    }
+//                }
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+//        JSONObject preferences = new JSONObject();
+//        preferences.put("theme", "dark");
+//        preferences.put("notifications", true);
+//        preferences.put("language", "ru");
+//
+//        JSONObject address = new JSONObject();
+//        address.put("city", "Москва");
+//        address.put("street", "Тверская");
+//        address.put("zip", "101000");
+//        preferences.put("address", address);
+//
+//        String sql = "INSERT INTO student_preferences (student_id, preferences) VALUES (?, ?::jsonb)";
+//
+//        try (Connection conn = DriverManager.getConnection(url, user, password);
+//             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//
+//            pstmt.setInt(1, 1);
+//            pstmt.setString(2, preferences.toString());
+//            pstmt.executeUpdate();
+//            System.out.println("✅ JSON сохранён в БД");
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        String sql = "SELECT student_id, preferences FROM student_preferences WHERE student_id = ?";
+//
+//        try (Connection conn = DriverManager.getConnection(url, user, password);
+//             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//
+//            pstmt.setInt(1, 1);
+//
+//            try (ResultSet rs = pstmt.executeQuery()) {
+//                if (rs.next()) {
+//                    String jsonStr = rs.getString("preferences");
+//                    JSONObject preferences = new JSONObject(jsonStr);
+//
+//                    System.out.println("📋 Предпочтения студента:");
+//                    System.out.println("   Тема: " + preferences.getString("theme"));
+//                    System.out.println("   Уведомления: " + preferences.getBoolean("notifications"));
+//                    System.out.println("   Язык: " + preferences.getString("language"));
+//
+//                    JSONObject address = preferences.getJSONObject("address");
+//                    System.out.println("   Адрес:");
+//                    System.out.println("      Город: " + address.getString("city"));
+//                    System.out.println("      Улица: " + address.getString("street"));
+//                }
+//            }
+///*
+//SELECT student_id, preferences->>'theme' AS theme, preferences->>'language' AS lang
+//FROM student_preferences WHERE preferences->>'theme' = 'dark';
+// */
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        String xml = """
+//            <?xml version="1.0" encoding="UTF-8"?>
+//            <student>
+//                <id>1</id>
+//                <firstName>Иван</firstName>
+//                <lastName>Петров</lastName>
+//                <age>20</age>
+//                <city>Москва</city>
+//            </student>
+//            """;
+//
+//        String sql = "INSERT INTO student_documents (student_id, document, doc_name) VALUES (?, XMLPARSE(DOCUMENT ?), ?)";
+//
+//        try (Connection conn = DriverManager.getConnection(url, user, password);
+//             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//
+//            pstmt.setInt(1, 1);
+//            pstmt.setString(2, xml);
+//            pstmt.setString(3, "student_info.xml");
+//            pstmt.executeUpdate();
+//            System.out.println("✅ XML сохранён в БД");
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        HikariConfig config = new HikariConfig();
+//        config.setJdbcUrl(url);
+//        config.setUsername(user);
+//        config.setPassword(password);
+//
+//        config.setMaximumPoolSize(10);        // Максимум соединений в пуле
+//        config.setMinimumIdle(5);             // Минимум свободных соединений
+//        config.setIdleTimeout(300000);        // 5 минут бездействия → закрыть
+//        config.setMaxLifetime(1800000);       // 30 минут → закрыть и создать новое
+//        config.setConnectionTimeout(30000);   // 30 секунд ожидания подключения
+//
+//        try (HikariDataSource ds = new HikariDataSource(config)) {
+//            for (int i = 0; i < 1500; i++) {
+//                try (Connection conn = ds.getConnection();
+//                     PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) FROM students");
+//                     ResultSet rs = pstmt.executeQuery()) {
+//
+//                    if (rs.next()) {
+//                        System.out.println("  Запрос " + (i + 1) + ": студентов = " + rs.getInt(1));
+//                    }
+//                }
+//            }
+//        }
+
+//        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+//            Statement statement = connection.createStatement(
+//                    ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE
+//            );
+//           /*
+//            ResultSet.TYPE_FORWARD_ONLY;
+//            ResultSet.TYPE_SCROLL_INSENSITIVE;
+//            ResultSet.TYPE_SCROLL_SENSITIVE;
+//
+//*/
+//
+//            ResultSet resultSet = statement.executeQuery("CREATE TABLE IF NOT EXISTS postgres (");
+//
+//        RowSetFactory rowSetFactory = RowSetProvider.newFactory();
+//        JdbcRowSet jdbcRowSet = rowSetFactory.createJdbcRowSet();
+//        CachedRowSet cachedRowSet = rowSetFactory.createCachedRowSet();
+//        FilteredRowSet filteredRowSet = rowSetFactory.createFilteredRowSet();
+//
+//
+//        jdbcRowSet.setUrl(url);
+//        jdbcRowSet.setUsername(user);
+//        jdbcRowSet.setPassword(password);
+//        jdbcRowSet.setCommand("SELECT 1");
+//        jdbcRowSet.execute();
+//
+//        while (jdbcRowSet.next()) {
+//            System.out.println(jdbcRowSet.getString(1));
+//        }
 
 
-    }
 
-    private static void calc(int i, int i1, Object obj) {
-        int result = 0;
-        result = i + i1;
-        System.out.println(result + obj.toString());
     }
 }

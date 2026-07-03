@@ -471,7 +471,7 @@ select * from students where id = 1;
 update students set age = 21 where id = 1;
 update students set email = 'ivan.petrov@example.net' , city= 'Пермь' where email = 'ivan.petrov@example.ru';
 
-WITH updated_avg AS (
+explain  analyse WITH updated_avg AS (
     SELECT student_id, AVG(grade) AS avg_grade
     FROM enrollments
     GROUP BY student_id
@@ -593,7 +593,9 @@ join enrollments e on s.id = e.student_id where e.grade in (4,5);
 
 select count(id) from students;
 
-
+alter table students add column photo bytea;
+alter table students add column preferences jsonb;
+alter table students add column  documents xml;
 
 
 
