@@ -597,7 +597,12 @@ alter table students add column photo bytea;
 alter table students add column preferences jsonb;
 alter table students add column  documents xml;
 
-
+CREATE TABLE passport (
+                          id SERIAL PRIMARY KEY,
+                          student_id INTEGER UNIQUE REFERENCES students(id),
+                          series VARCHAR(10),
+                          number VARCHAR(20)
+);
 
 
 
