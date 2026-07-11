@@ -42,142 +42,171 @@ insert into students_courses_link (student_id, course_id)
 values (1, 1),
        (1, 2),
        (2, 3),
-       (3,3),
-       (4,2),
-       (4,4);
+       (3, 3),
+       (4, 2),
+       (4, 4);
 
-select first_name from students where first_name in ('Иван', 'Сергей');
+select first_name
+from students
+where first_name in ('Иван', 'Сергей');
 
-select students.first_name from students where age = 20 or age = 21;
-select students.first_name from students where age in (20 , 21);
+select students.first_name
+from students
+where age = 20
+   or age = 21;
+select students.first_name
+from students
+where age in (20, 21);
 
-select students.first_name, students.last_name from students order by age DESC, last_name;
+select students.first_name, students.last_name
+from students
+order by age DESC, last_name;
 
-select * from students order by students.age desc limit 2 offset 2;
+select *
+from students
+order by students.age desc
+limit 2 offset 2;
 
-select students.first_name from students;
+select students.first_name
+from students;
 
-select * from students where email is null;
+select *
+from students
+where email is null;
 
-select count(first_name) from students where age = 20;
+select count(first_name)
+from students
+where age = 20;
 
-select avg(students.age) from students;
+select avg(students.age)
+from students;
 
-select max(students.age) as max_age, min(students.age) as min_age from students;
+select max(students.age) as max_age, min(students.age) as min_age
+from students;
 
-select sum(students.age) from students;
+select sum(students.age)
+from students;
 
-select age, count(*) from students group by age order by age;
+select age, count(*)
+from students
+group by age
+order by age;
 /*
  if-else switch
  */
 
 -- ===== ТАБЛИЦА СТУДЕНТОВ =====
-CREATE TABLE students (
-                          id SERIAL PRIMARY KEY,
-                          first_name VARCHAR(50) NOT NULL,
-                          last_name VARCHAR(50) NOT NULL,
-                          age INTEGER CHECK (age > 0 AND age < 100),
-                          email VARCHAR(100) UNIQUE,
-                          phone VARCHAR(20),
-                          city VARCHAR(50),
-                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE students
+(
+    id         SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name  VARCHAR(50) NOT NULL,
+    age        INTEGER CHECK (age > 0 AND age < 100),
+    email      VARCHAR(100) UNIQUE,
+    phone      VARCHAR(20),
+    city       VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- ===== ТАБЛИЦА КУРСОВ =====
-CREATE TABLE courses (
-                         id SERIAL PRIMARY KEY,
-                         title VARCHAR(100) NOT NULL,
-                         description TEXT,
-                         credits INTEGER DEFAULT 3 CHECK (credits BETWEEN 1 AND 6),
-                         language_id INTEGER DEFAULT 1,
-                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE courses
+(
+    id          SERIAL PRIMARY KEY,
+    title       VARCHAR(100) NOT NULL,
+    description TEXT,
+    credits     INTEGER   DEFAULT 3 CHECK (credits BETWEEN 1 AND 6),
+    language_id INTEGER   DEFAULT 1,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- ===== ТАБЛИЦА ПРЕПОДАВАТЕЛЕЙ =====
-CREATE TABLE teachers (
-                          id SERIAL PRIMARY KEY,
-                          first_name VARCHAR(50) NOT NULL,
-                          last_name VARCHAR(50) NOT NULL,
-                          email VARCHAR(100) UNIQUE,
-                          department VARCHAR(50)
+CREATE TABLE teachers
+(
+    id         SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name  VARCHAR(50) NOT NULL,
+    email      VARCHAR(100) UNIQUE,
+    department VARCHAR(50)
 );
 
 -- ===== ТАБЛИЦА ЗАПИСИ НА КУРСЫ =====
-CREATE TABLE enrollments (
-                             student_id INTEGER REFERENCES students(id) ON DELETE CASCADE,
-                             course_id INTEGER REFERENCES courses(id) ON DELETE CASCADE,
-                             teacher_id INTEGER REFERENCES teachers(id),
-                             enrollment_date DATE DEFAULT CURRENT_DATE,
-                             grade INTEGER CHECK (grade BETWEEN 1 AND 5),
-                             PRIMARY KEY (student_id, course_id)
+CREATE TABLE enrollments
+(
+    student_id      INTEGER REFERENCES students (id) ON DELETE CASCADE,
+    course_id       INTEGER REFERENCES courses (id) ON DELETE CASCADE,
+    teacher_id      INTEGER REFERENCES teachers (id),
+    enrollment_date DATE DEFAULT CURRENT_DATE,
+    grade           INTEGER CHECK (grade BETWEEN 1 AND 5),
+    PRIMARY KEY (student_id, course_id)
 );
 
 -- ===== ТАБЛИЦА ОЦЕНОК (для агрегаций) =====
-CREATE TABLE grades (
-                        id SERIAL PRIMARY KEY,
-                        student_id INTEGER REFERENCES students(id) ON DELETE CASCADE,
-                        course_id INTEGER REFERENCES courses(id) ON DELETE CASCADE,
-                        grade INTEGER CHECK (grade BETWEEN 1 AND 5),
-                        exam_date DATE DEFAULT CURRENT_DATE,
-                        UNIQUE (student_id, course_id, exam_date)
+CREATE TABLE grades
+(
+    id         SERIAL PRIMARY KEY,
+    student_id INTEGER REFERENCES students (id) ON DELETE CASCADE,
+    course_id  INTEGER REFERENCES courses (id) ON DELETE CASCADE,
+    grade      INTEGER CHECK (grade BETWEEN 1 AND 5),
+    exam_date  DATE DEFAULT CURRENT_DATE,
+    UNIQUE (student_id, course_id, exam_date)
 );
-INSERT INTO students (first_name, last_name, age, email, phone, city) VALUES
-                                                                          ('Иван', 'Петров', 20, 'ivan.petrov@example.com', '+7-999-123-45-67', 'Москва'),
-                                                                          ('Мария', 'Сидорова', 19, 'maria.sidorova@example.com', '+7-999-234-56-78', 'Санкт-Петербург'),
-                                                                          ('Петр', 'Иванов', 21, 'petr.ivanov@example.com', '+7-999-345-67-89', 'Москва'),
-                                                                          ('Анна', 'Кузнецова', 20, 'anna.kuznetsova@example.com', '+7-999-456-78-90', 'Казань'),
-                                                                          ('Сергей', 'Смирнов', 22, 'sergey.smirnov@example.com', NULL, 'Москва'),
-                                                                          ('Елена', 'Попова', 18, 'elena.popova@example.com', '+7-999-567-89-01', 'Новосибирск'),
-                                                                          ('Алексей', 'Соколов', 23, 'alexey.sokolov@example.com', '+7-999-678-90-12', 'Екатеринбург'),
-                                                                          ('Ольга', 'Михайлова', 20, 'olga.mikhailova@example.com', '+7-999-789-01-23', 'Москва'),
-                                                                          ('Дмитрий', 'Федоров', 19, 'dmitry.fedorov@example.com', '+7-999-890-12-34', 'Санкт-Петербург'),
-                                                                          ('Наталья', 'Морозова', 21, 'natalia.morozova@example.com', '+7-999-901-23-45', 'Казань'),
-                                                                          ('Андрей', 'Волков', 20, 'andrey.volkov@example.com', '+7-999-012-34-56', 'Москва'),
-                                                                          ('Татьяна', 'Алексеева', 22, 'tatyana.alekseeva@example.com', NULL, 'Новосибирск'),
-                                                                          ('Игорь', 'Лебедев', 18, 'igor.lebedev@example.com', '+7-999-123-45-67', 'Екатеринбург'),
-                                                                          ('Светлана', 'Егорова', 19, 'svetlana.egorova@example.com', '+7-999-234-56-78', 'Москва'),
-                                                                          ('Владимир', 'Николаев', 24, 'vladimir.nikolaev@example.com', '+7-999-345-67-89', 'Санкт-Петербург'),
-                                                                          ('Екатерина', 'Павлова', 20, 'ekaterina.pavlova@example.com', '+7-999-456-78-90', 'Казань'),
-                                                                          ('Александр', 'Семенов', 21, 'alexander.semenov@example.com', '+7-999-567-89-01', 'Москва'),
-                                                                          ('Юлия', 'Григорьева', 19, 'yulia.grigorieva@example.com', '+7-999-678-90-12', 'Новосибирск'),
-                                                                          ('Николай', 'Антонов', 22, 'nikolay.antonov@example.com', NULL, 'Екатеринбург'),
-                                                                          ('Анастасия', 'Фролова', 20, 'anastasia.frolova@example.com', '+7-999-789-01-23', 'Москва'),
-                                                                          ('Константин', 'Макаров', 18, 'konstantin.makarov@example.com', '+7-999-890-12-34', 'Санкт-Петербург'),
-                                                                          ('Дарья', 'Орлова', 21, 'darya.orlova@example.com', '+7-999-901-23-45', 'Казань'),
-                                                                          ('Георгий', 'Белов', 23, 'georgy.belov@example.com', '+7-999-012-34-56', 'Москва'),
-                                                                          ('Оксана', 'Тихонова', 20, 'oksana.tikhonova@example.com', '+7-999-123-45-67', 'Новосибирск'),
-                                                                          ('Максим', 'Козлов', 19, 'maxim.kozlov@example.com', '+7-999-234-56-78', 'Екатеринбург'),
-                                                                          ('Алина', 'Давыдова', 22, 'alina.davydova@example.com', '+7-999-345-67-89', 'Москва'),
-                                                                          ('Артем', 'Пономарев', 20, 'artem.ponomarev@example.com', NULL, 'Санкт-Петербург'),
-                                                                          ('Виктория', 'Романова', 18, 'viktoria.romanova@example.com', '+7-999-456-78-90', 'Казань'),
-                                                                          ('Роман', 'Зайцев', 21, 'roman.zaytsev@example.com', '+7-999-567-89-01', 'Москва'),
-                                                                          ('Евгения', 'Мельникова', 19, 'evgeniya.melnikova@example.com', '+7-999-678-90-12', 'Новосибирск');
+INSERT INTO students (first_name, last_name, age, email, phone, city)
+VALUES ('Иван', 'Петров', 20, 'ivan.petrov@example.com', '+7-999-123-45-67', 'Москва'),
+       ('Мария', 'Сидорова', 19, 'maria.sidorova@example.com', '+7-999-234-56-78', 'Санкт-Петербург'),
+       ('Петр', 'Иванов', 21, 'petr.ivanov@example.com', '+7-999-345-67-89', 'Москва'),
+       ('Анна', 'Кузнецова', 20, 'anna.kuznetsova@example.com', '+7-999-456-78-90', 'Казань'),
+       ('Сергей', 'Смирнов', 22, 'sergey.smirnov@example.com', NULL, 'Москва'),
+       ('Елена', 'Попова', 18, 'elena.popova@example.com', '+7-999-567-89-01', 'Новосибирск'),
+       ('Алексей', 'Соколов', 23, 'alexey.sokolov@example.com', '+7-999-678-90-12', 'Екатеринбург'),
+       ('Ольга', 'Михайлова', 20, 'olga.mikhailova@example.com', '+7-999-789-01-23', 'Москва'),
+       ('Дмитрий', 'Федоров', 19, 'dmitry.fedorov@example.com', '+7-999-890-12-34', 'Санкт-Петербург'),
+       ('Наталья', 'Морозова', 21, 'natalia.morozova@example.com', '+7-999-901-23-45', 'Казань'),
+       ('Андрей', 'Волков', 20, 'andrey.volkov@example.com', '+7-999-012-34-56', 'Москва'),
+       ('Татьяна', 'Алексеева', 22, 'tatyana.alekseeva@example.com', NULL, 'Новосибирск'),
+       ('Игорь', 'Лебедев', 18, 'igor.lebedev@example.com', '+7-999-123-45-67', 'Екатеринбург'),
+       ('Светлана', 'Егорова', 19, 'svetlana.egorova@example.com', '+7-999-234-56-78', 'Москва'),
+       ('Владимир', 'Николаев', 24, 'vladimir.nikolaev@example.com', '+7-999-345-67-89', 'Санкт-Петербург'),
+       ('Екатерина', 'Павлова', 20, 'ekaterina.pavlova@example.com', '+7-999-456-78-90', 'Казань'),
+       ('Александр', 'Семенов', 21, 'alexander.semenov@example.com', '+7-999-567-89-01', 'Москва'),
+       ('Юлия', 'Григорьева', 19, 'yulia.grigorieva@example.com', '+7-999-678-90-12', 'Новосибирск'),
+       ('Николай', 'Антонов', 22, 'nikolay.antonov@example.com', NULL, 'Екатеринбург'),
+       ('Анастасия', 'Фролова', 20, 'anastasia.frolova@example.com', '+7-999-789-01-23', 'Москва'),
+       ('Константин', 'Макаров', 18, 'konstantin.makarov@example.com', '+7-999-890-12-34', 'Санкт-Петербург'),
+       ('Дарья', 'Орлова', 21, 'darya.orlova@example.com', '+7-999-901-23-45', 'Казань'),
+       ('Георгий', 'Белов', 23, 'georgy.belov@example.com', '+7-999-012-34-56', 'Москва'),
+       ('Оксана', 'Тихонова', 20, 'oksana.tikhonova@example.com', '+7-999-123-45-67', 'Новосибирск'),
+       ('Максим', 'Козлов', 19, 'maxim.kozlov@example.com', '+7-999-234-56-78', 'Екатеринбург'),
+       ('Алина', 'Давыдова', 22, 'alina.davydova@example.com', '+7-999-345-67-89', 'Москва'),
+       ('Артем', 'Пономарев', 20, 'artem.ponomarev@example.com', NULL, 'Санкт-Петербург'),
+       ('Виктория', 'Романова', 18, 'viktoria.romanova@example.com', '+7-999-456-78-90', 'Казань'),
+       ('Роман', 'Зайцев', 21, 'roman.zaytsev@example.com', '+7-999-567-89-01', 'Москва'),
+       ('Евгения', 'Мельникова', 19, 'evgeniya.melnikova@example.com', '+7-999-678-90-12', 'Новосибирск');
 
-INSERT INTO teachers (first_name, last_name, email, department) VALUES
-                                                                    ('Алексей', 'Иванов', 'alexey.ivanov@university.edu', 'Математика'),
-                                                                    ('Мария', 'Петрова', 'maria.petrova@university.edu', 'Физика'),
-                                                                    ('Сергей', 'Сидоров', 'sergey.sidorov@university.edu', 'Информатика'),
-                                                                    ('Елена', 'Кузнецова', 'elena.kuznetsova@university.edu', 'Математика'),
-                                                                    ('Андрей', 'Смирнов', 'andrey.smirnov@university.edu', 'Физика'),
-                                                                    ('Ольга', 'Попова', 'olga.popova@university.edu', 'Информатика'),
-                                                                    ('Дмитрий', 'Соколов', 'dmitry.sokolov@university.edu', 'Биология'),
-                                                                    ('Наталья', 'Михайлова', 'natalia.mikhailova@university.edu', 'Математика');
+INSERT INTO teachers (first_name, last_name, email, department)
+VALUES ('Алексей', 'Иванов', 'alexey.ivanov@university.edu', 'Математика'),
+       ('Мария', 'Петрова', 'maria.petrova@university.edu', 'Физика'),
+       ('Сергей', 'Сидоров', 'sergey.sidorov@university.edu', 'Информатика'),
+       ('Елена', 'Кузнецова', 'elena.kuznetsova@university.edu', 'Математика'),
+       ('Андрей', 'Смирнов', 'andrey.smirnov@university.edu', 'Физика'),
+       ('Ольга', 'Попова', 'olga.popova@university.edu', 'Информатика'),
+       ('Дмитрий', 'Соколов', 'dmitry.sokolov@university.edu', 'Биология'),
+       ('Наталья', 'Михайлова', 'natalia.mikhailova@university.edu', 'Математика');
 
-INSERT INTO courses (title, description, credits, language_id) VALUES
-                                                                   ('Математический анализ', 'Основы дифференциального и интегрального исчисления', 4, 1),
-                                                                   ('Линейная алгебра', 'Векторные пространства, матрицы, определители', 3, 1),
-                                                                   ('Общая физика', 'Механика, термодинамика, электродинамика', 4, 1),
-                                                                   ('Программирование на Java', 'Основы Java, ООП, коллекции, потоки', 5, 1),
-                                                                   ('Базы данных', 'Реляционные базы данных, SQL, нормализация', 4, 1),
-                                                                   ('Теория вероятностей', 'Основы теории вероятностей и статистики', 3, 1),
-                                                                   ('Алгоритмы и структуры данных', 'Базовые алгоритмы и структуры', 5, 1),
-                                                                   ('Операционные системы', 'Основы архитектуры ОС, управление памятью', 3, 1),
-                                                                   ('Дифференциальные уравнения', 'Методы решения ДУ', 3, 1),
-                                                                   ('Web-разработка', 'HTML, CSS, JavaScript, серверный JavaScript', 4, 1),
-                                                                   ('Искусственный интеллект', 'Введение в AI, машинное обучение', 5, 1),
-                                                                   ('Математическая статистика', 'Основы статистического анализа данных', 3, 1);
-INSERT INTO enrollments (student_id, course_id, teacher_id, enrollment_date, grade) VALUES
+INSERT INTO courses (title, description, credits, language_id)
+VALUES ('Математический анализ', 'Основы дифференциального и интегрального исчисления', 4, 1),
+       ('Линейная алгебра', 'Векторные пространства, матрицы, определители', 3, 1),
+       ('Общая физика', 'Механика, термодинамика, электродинамика', 4, 1),
+       ('Программирование на Java', 'Основы Java, ООП, коллекции, потоки', 5, 1),
+       ('Базы данных', 'Реляционные базы данных, SQL, нормализация', 4, 1),
+       ('Теория вероятностей', 'Основы теории вероятностей и статистики', 3, 1),
+       ('Алгоритмы и структуры данных', 'Базовые алгоритмы и структуры', 5, 1),
+       ('Операционные системы', 'Основы архитектуры ОС, управление памятью', 3, 1),
+       ('Дифференциальные уравнения', 'Методы решения ДУ', 3, 1),
+       ('Web-разработка', 'HTML, CSS, JavaScript, серверный JavaScript', 4, 1),
+       ('Искусственный интеллект', 'Введение в AI, машинное обучение', 5, 1),
+       ('Математическая статистика', 'Основы статистического анализа данных', 3, 1);
+INSERT INTO enrollments (student_id, course_id, teacher_id, enrollment_date, grade)
+VALUES
 -- Студент 1 (Иван Петров)
 (1, 1, 1, '2024-01-15', 5),
 (1, 2, 1, '2024-01-15', 4),
@@ -286,68 +315,91 @@ INSERT INTO enrollments (student_id, course_id, teacher_id, enrollment_date, gra
 (30, 1, 1, '2024-01-15', 4),
 (30, 3, 2, '2024-01-15', 5);
 
-select students.first_name, students.last_name, coalesce(students.phone, 'Не указан') from students limit 20;
+select students.first_name, students.last_name, coalesce(students.phone, 'Не указан')
+from students
+limit 20;
 
-select students.first_name, students.last_name, coalesce(students.phone, students.email, 'No contact') as contact from students;
+select students.first_name, students.last_name, coalesce(students.phone, students.email, 'No contact') as contact
+from students;
 
-select students.first_name, students.last_name, nullif(students.email,'') as email from students;
+select students.first_name, students.last_name, nullif(students.email, '') as email
+from students;
 
-select students.first_name, students.last_name, age, CASE students.age
-                                                         when 18 then 'Young'
-                                                         when 19 then 'Middle'
-                                                         else 'Old'
-    END as category from students order by age;
-select count(students.first_name) from students;
-select count(students.phone) from students;
+select students.first_name,
+       students.last_name,
+       age,
+       CASE students.age
+           when 18 then 'Young'
+           when 19 then 'Middle'
+           else 'Old'
+           END as category
+from students
+order by age;
+select count(students.first_name)
+from students;
+select count(students.phone)
+from students;
 
-select students.city, count(*) as total from students group by city;
+select students.city, count(*) as total
+from students
+group by city;
 
-select * from students where age > 20;
+select *
+from students
+where age > 20;
 
-select students.city, count(*) as total from students group by city HAVING count(*) > 2;
+select students.city, count(*) as total
+from students
+group by city
+HAVING count(*) > 2;
 /*
  WHERE
  GROUP BY
  HAVING
  ORDER BY LIMIT
  */
-select count(id) from students;
-select count(id) from courses;
+select count(id)
+from students;
+select count(id)
+from courses;
 
 SELECT s.first_name, s.last_name, e.grade
-FROM students s, enrollments e
+FROM students s,
+     enrollments e
 WHERE s.id = e.student_id;
 /*
  Nested Loop  (cost=13.01..31.69 rows=77 width=634)
  */
 
-SELECT s.first_name, s.last_name,s.phone, e.grade, c.title, t.first_name
+SELECT s.first_name, s.last_name, s.phone, e.grade, c.title, t.first_name
 FROM students s
          INNER JOIN enrollments e ON s.id = e.student_id
          INNER JOIN courses c ON e.course_id = c.id
          INNER JOIN teachers t ON e.teacher_id = t.id;
 
-SELECT s.first_name, s.last_name,s.phone, e.grade, c.title
-FROM students s, enrollments e, courses c
-WHERE s.id = e.student_id and e.course_id = c.id;
+SELECT s.first_name, s.last_name, s.phone, e.grade, c.title
+FROM students s,
+     enrollments e,
+     courses c
+WHERE s.id = e.student_id
+  and e.course_id = c.id;
 
-INSERT INTO students (first_name, last_name, age, email, phone, city) VALUES
-                                                                          ('Аркадий', 'Паровозов', 20, 'arkadiy.parovozov@example.com', '+7-999-111-22-33', 'Москва'),
-                                                                          ('Зинаида', 'Петрова', 19, 'zinaida.petrova@example.com', '+7-999-222-33-44', 'Санкт-Петербург'),
-                                                                          ('Фёдор', 'Сумкин', 21, 'fyodor.sumkin@example.com', NULL, 'Казань');
+INSERT INTO students (first_name, last_name, age, email, phone, city)
+VALUES ('Аркадий', 'Паровозов', 20, 'arkadiy.parovozov@example.com', '+7-999-111-22-33', 'Москва'),
+       ('Зинаида', 'Петрова', 19, 'zinaida.petrova@example.com', '+7-999-222-33-44', 'Санкт-Петербург'),
+       ('Фёдор', 'Сумкин', 21, 'fyodor.sumkin@example.com', NULL, 'Казань');
 
-INSERT INTO enrollments (student_id, course_id, teacher_id, enrollment_date, grade) VALUES
-                                                                                        (31, 1, 1, '2024-01-15', 4),
-                                                                                        (32, 5, 3, '2024-01-15', 5),
-                                                                                        (1, 6, 4, '2024-01-15', 3),
-                                                                                        (2, 2, 1, '2024-01-15', 4);
+INSERT INTO enrollments (student_id, course_id, teacher_id, enrollment_date, grade)
+VALUES (31, 1, 1, '2024-01-15', 4),
+       (32, 5, 3, '2024-01-15', 5),
+       (1, 6, 4, '2024-01-15', 3),
+       (2, 2, 1, '2024-01-15', 4);
 
 
 
-SELECT
-    s.first_name,
-    s.last_name,
-    COALESCE(e.grade::text, 'Нет оценки') AS grade
+SELECT s.first_name,
+       s.last_name,
+       COALESCE(e.grade::text, 'Нет оценки') AS grade
 FROM students s
          LEFT JOIN enrollments e ON s.id = e.student_id
 ORDER BY e.grade DESC NULLS LAST;
@@ -359,148 +411,162 @@ ORDER BY e.grade DESC NULLS LAST;
  ORDER BY LIMIT
  */
 
-SELECT
-    t.first_name || ' ' || t.last_name AS teacher,
-    s.first_name || ' ' || s.last_name AS student,
-    c.title AS course,
-    e.grade
+SELECT t.first_name || ' ' || t.last_name AS teacher,
+       s.first_name || ' ' || s.last_name AS student,
+       c.title                            AS course,
+       e.grade
 FROM teachers t
          LEFT JOIN enrollments e ON t.id = e.teacher_id
          LEFT JOIN students s ON e.student_id = s.id
          LEFT JOIN courses c ON e.course_id = c.id
 ORDER BY t.last_name, e.grade DESC NULLS LAST;
 
-SELECT
-    c.title,
-    COUNT(e.student_id) AS student_count,
-    coalesce(AVG(e.grade) , 0.0) AS avg_grade
+SELECT c.title,
+       COUNT(e.student_id)         AS student_count,
+       coalesce(AVG(e.grade), 0.0) AS avg_grade
 FROM courses c
          LEFT JOIN enrollments e ON c.id = e.course_id
 GROUP BY c.id, c.title
 ORDER BY student_count DESC;
 
-SELECT avg(students.age) from students;
+SELECT avg(students.age)
+from students;
 
-select students.first_name, students.last_name, students.age from students where age > (SELECT avg(students.age) from students);
+select students.first_name, students.last_name, students.age
+from students
+where age > (SELECT avg(students.age) from students);
 
 SELECT course_stats.course_title, course_stats.avg_grade
-FROM (
-         SELECT
-             c.title AS course_title,
+FROM (SELECT c.title      AS course_title,
              AVG(e.grade) AS avg_grade
-         FROM courses c
-                  JOIN enrollments e ON c.id = e.course_id
-         GROUP BY c.id, c.title
-     ) AS course_stats
+      FROM courses c
+               JOIN enrollments e ON c.id = e.course_id
+      GROUP BY c.id, c.title) AS course_stats
 WHERE course_stats.avg_grade > 4.0
 ORDER BY course_stats.avg_grade DESC;
 
 SELECT first_name, last_name
 FROM students s
-WHERE EXISTS (
-    SELECT 465465654654
-    FROM enrollments e
-    WHERE e.student_id = s.id
-);
+WHERE EXISTS (SELECT 465465654654
+              FROM enrollments e
+              WHERE e.student_id = s.id);
 
 
-select students.first_name, students.last_name, students.age from students
+select students.first_name, students.last_name, students.age
+from students
 where age > (select avg(age) from students);
 
-select first_name, last_name from students st where
-exists (select 1 from enrollments e where st.id = e.student_id);
+select first_name, last_name
+from students st
+where exists (select 1 from enrollments e where st.id = e.student_id);
 
-select first_name, last_name from students st
+select first_name, last_name
+from students st
 where id IN (select student_id from enrollments);
 
 -- CTE --
-WITH name_cte AS (
-    select * from students
-)
-select name_cte.first_name from name_cte;
+WITH name_cte AS (select *
+                  from students)
+select name_cte.first_name
+from name_cte;
 
-with avr_grade as (
-    select avg(grade) as avr_global from enrollments
-)
-select st.first_name, st.last_name, avg(e.grade) from students st
-join enrollments e on st.id = e.student_id
+with avr_grade as (select avg(grade) as avr_global
+                   from enrollments)
+select st.first_name, st.last_name, avg(e.grade)
+from students st
+         join enrollments e on st.id = e.student_id
 group by st.id, st.first_name, st.last_name
 having avg(e.grade) > (select avr_global from avr_grade);
 
 -- я хочу получить фамилию имя студента с оценками и количеством преподавателей
 -- этого студента студент учитель курс оценка если учитель на двух предметах - средняя оценка предметов
 
-select students.first_name, students.last_name, students.age,
-       students.age + 10 as age_10, students.age *2 as double from students;
+select students.first_name,
+       students.last_name,
+       students.age,
+       students.age + 10 as age_10,
+       students.age * 2  as double
+from students;
 
-SELECT
-    title,
-    courses.credits,
-    ROUND(credits * 1.0 / 2, 2) AS half_credits,
-    FLOOR(credits / 2.0) AS floor_credits,
-    CEIL(credits / 2.0) AS ceil_credits,
-    ABS(credits - 4) AS diff_from_4
+SELECT title,
+       courses.credits,
+       ROUND(credits * 1.0 / 2, 2) AS half_credits,
+       FLOOR(credits / 2.0)        AS floor_credits,
+       CEIL(credits / 2.0)         AS ceil_credits,
+       ABS(credits - 4)            AS diff_from_4
 FROM courses
 LIMIT 10;
 
-SELECT
-    COUNT(*) AS total,
-    AVG(age) AS avg_age,
-    MIN(age) AS min_age,
-    MAX(age) AS max_age,
-    SUM(age) AS sum_ages
+SELECT COUNT(*) AS total,
+       AVG(age) AS avg_age,
+       MIN(age) AS min_age,
+       MAX(age) AS max_age,
+       SUM(age) AS sum_ages
 FROM students;
 
-SELECT
-    enrollment_date,
-    enrollment_date + INTERVAL '1 year' AS year_later,
-    enrollment_date - INTERVAL '6 months' AS six_months_before,
-    enrollment_date + INTERVAL '7 days' AS week_later
+SELECT enrollment_date,
+       enrollment_date + INTERVAL '1 year'   AS year_later,
+       enrollment_date - INTERVAL '6 months' AS six_months_before,
+       enrollment_date + INTERVAL '7 days'   AS week_later
 FROM enrollments
 LIMIT 10;
 
-SELECT
-    enrollment_date,
-    TO_CHAR(enrollment_date, 'DD.MM.YYYY') AS date_ru,
-    TO_CHAR(enrollment_date, 'Month DD, YYYY') AS date_us,
-    TO_CHAR(enrollment_date, 'Day, DD Mon YYYY') AS long_date
+SELECT enrollment_date,
+       TO_CHAR(enrollment_date, 'DD.MM.YYYY')       AS date_ru,
+       TO_CHAR(enrollment_date, 'Month DD, YYYY')   AS date_us,
+       TO_CHAR(enrollment_date, 'Day, DD Mon YYYY') AS long_date
 FROM enrollments
 LIMIT 10;
 
-select * from students where id = 1;
-update students set age = 21 where id = 1;
-update students set email = 'ivan.petrov@example.net' , city= 'Пермь' where email = 'ivan.petrov@example.ru';
+select *
+from students
+where id = 1;
+update students
+set age = 21
+where id = 1;
+update students
+set email = 'ivan.petrov@example.net',
+    city= 'Пермь'
+where email = 'ivan.petrov@example.ru';
 
-explain  analyse WITH updated_avg AS (
-    SELECT student_id, AVG(grade) AS avg_grade
-    FROM enrollments
-    GROUP BY student_id
-)
+explain analyse
+WITH updated_avg AS (SELECT student_id, AVG(grade) AS avg_grade
+                     FROM enrollments
+                     GROUP BY student_id)
 UPDATE students
 SET age = age + 1
 FROM updated_avg
 WHERE students.id = updated_avg.student_id
   AND updated_avg.avg_grade > 4.5;
 
-DELETE FROM students where id = 32;
+DELETE
+FROM students
+where id = 32;
 
-select * from enrollments where student_id = 32;
+select *
+from enrollments
+where student_id = 32;
 
-alter table students add column birth_date  date not null default now();
-alter table students drop column birth_date;
+alter table students
+    add column birth_date date not null default now();
+alter table students
+    drop column birth_date;
 
-alter table students alter column last_name type varchar(100);
-alter table students rename column last_name TO last_name_2;
+alter table students
+    alter column last_name type varchar(100);
+alter table students
+    rename column last_name TO last_name_2;
 
 -- DDL(CREATE ALTER DROP TRUNCATE) DML (SELECT INSERT UPDATE DELETE)
 -- DCL (GRANT REVOKE DENY) TCL (COMMIT ROLlBACK SAVEPOINT)
 
-INSERT INTO students (first_name, last_name, age, email, phone, city) VALUES
-('Аркадий2', 'Паровозов2', 21, 'arkadiy2.parovozov@example.com', '+7-999-111-22-33', 'Москва')
+INSERT INTO students (first_name, last_name, age, email, phone, city)
+VALUES ('Аркадий2', 'Паровозов2', 21, 'arkadiy2.parovozov@example.com', '+7-999-111-22-33', 'Москва')
 returning id;
 
 CREATE OR REPLACE FUNCTION before_student_insert()
-    RETURNS TRIGGER AS $$
+    RETURNS TRIGGER AS
+$$
 BEGIN
     -- Если created_at не указан, ставим текущую дату
     IF NEW.created_at IS NULL THEN
@@ -521,12 +587,11 @@ CREATE TABLE students_backup AS TABLE students WITH NO DATA;
 
 -- Копирование студентов из Москвы с изменением email
 INSERT INTO students_backup (first_name, last_name, age, email, city)
-SELECT
-    first_name,
-    last_name,
-    age,
-    LOWER(CONCAT(first_name, '.', last_name, '@example.com')) AS email,
-    city
+SELECT first_name,
+       last_name,
+       age,
+       LOWER(CONCAT(first_name, '.', last_name, '@example.com')) AS email,
+       city
 FROM students
 WHERE city = 'Москва';
 
@@ -535,21 +600,30 @@ SET email = LOWER(CONCAT(first_name, '.', last_name, '@university.edu'))
 WHERE email IS NULL;
 
 BEGIN;
-select * from students WHERE city = 'Москва';
-UPDATE  students set age = age +1 WHERE city = 'Москва';
+select *
+from students
+WHERE city = 'Москва';
+UPDATE students
+set age = age + 1
+WHERE city = 'Москва';
 insert into enrollments (student_id, course_id, teacher_id, grade)
-VALUES (31,1,1,5);
-select * from students WHERE city = 'Москва';
+VALUES (31, 1, 1, 5);
+select *
+from students
+WHERE city = 'Москва';
 commit;
 rollback;
 
 BEGIN;
 --INSERT INTO students SET age = age + 1 WHERE city = 'Москва';
-UPDATE students SET age = age + 1 WHERE city = 'Москва';
+UPDATE students
+SET age = age + 1
+WHERE city = 'Москва';
 -- Точка сохранения
 SAVEPOINT before_insert;
 INSERT INTO enrollments (student_id, course_id, teacher_id, grade)
-VALUES (999, 1, 1, 5);  -- Ошибка! Student 999 не существует
+VALUES (999, 1, 1, 5);
+-- Ошибка! Student 999 не существует
 -- Откат только до точки сохранения
 ROLLBACK TO SAVEPOINT before_insert;
 -- Теперь можно сделать другой INSERT
@@ -560,55 +634,133 @@ COMMIT;
 
 BEGIN;
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-SELECT * FROM students;
+SELECT *
+FROM students;
 COMMIT;
 
-explain analyse select * from students where age = 20;
-create index on students(age);
+explain analyse
+select *
+from students
+where age = 20;
+create index on students (age);
 --create index on students(email) using hash;
-select * from students where email like '%com';
-select * from students order by age;
+select *
+from students
+where email like '%com';
+select *
+from students
+order by age;
 --Seq Scan on students  (cost=0.00..11.25 rows=1 width=746) (actual time=0.016..0.020 rows=8 loops=1)
 --Filter: (age = 20)
-  --Rows Removed by Filter: 25
+--Rows Removed by Filter: 25
 --Planning Time: 0.079 ms
 --Execution Time: 0.046 ms
 
 create index on students (city, age, first_name);
-SELECT * FROM students WHERE city = 'Москва' AND age = 20 AND first_name = 'Иван';
-SELECT * FROM students WHERE city = 'Москва' AND age = 20;
-SELECT * FROM students WHERE city = 'Москва';
-SELECT * FROM students WHERE age = 20;
+SELECT *
+FROM students
+WHERE city = 'Москва'
+  AND age = 20
+  AND first_name = 'Иван';
+SELECT *
+FROM students
+WHERE city = 'Москва'
+  AND age = 20;
+SELECT *
+FROM students
+WHERE city = 'Москва';
+SELECT *
+FROM students
+WHERE age = 20;
 
 
-update students set age = age + 1
-where exists(select * from grades where grades.student_id = students.id and grade in (4,5));
+update students
+set age = age + 1
+where exists(select * from grades where grades.student_id = students.id and grade in (4, 5));
 
-select students.first_name, students.last_name, age from students
-where exists(
-select * from grades where grades.student_id = students.id and grade in (4,5));
+select students.first_name, students.last_name, age
+from students
+where exists(select * from grades where grades.student_id = students.id and grade in (4, 5));
 
-select distinct s.id, s.first_name, s.last_name from students s
-join enrollments e on s.id = e.student_id where e.grade in (4,5);
+select distinct s.id, s.first_name, s.last_name
+from students s
+         join enrollments e on s.id = e.student_id
+where e.grade in (4, 5);
 
-select count(id) from students;
+select count(id)
+from students;
 
-alter table students add column photo bytea;
-alter table students add column preferences jsonb;
-alter table students add column  documents xml;
+alter table students
+    add column photo bytea;
+alter table students
+    add column preferences jsonb;
+alter table students
+    add column documents xml;
 
-CREATE TABLE passport (
-                          id SERIAL PRIMARY KEY,
-                          student_id INTEGER UNIQUE REFERENCES students(id),
-                          series VARCHAR(10),
-                          number VARCHAR(20)
+CREATE TABLE passport
+(
+    id         SERIAL PRIMARY KEY,
+    student_id INTEGER UNIQUE REFERENCES students (id),
+    series     VARCHAR(10),
+    number     VARCHAR(20)
 );
 
 
+create table authors
+(
+    id      serial primary key,
+    name    varchar(100) not null unique,
+    country varchar(20)
+);
+
+create table books
+(
+    id               serial primary key,
+    title            varchar(200) not null,
+    publication_year INTEGER,
+    author_id        integer references authors (id)
+);
+
+create table genres
+(
+    id   serial primary key,
+    name varchar(100) not null unique
+);
+
+create table book_genres
+(
+    book_id  integer references books (id),
+    genre_id integer references genres (id),
+    primary key (book_id, genre_id)
+);
+
+-- Вставляем тестовые данные
+INSERT INTO authors (name, country) VALUES
+                                        ('Лев Толстой', 'Россия'),
+                                        ('Фёдор Достоевский', 'Россия'),
+                                        ('Джордж Оруэлл', 'Великобритания'),
+                                        ('Михаил Булгаков', 'Россия');
+
+INSERT INTO books (title, author_id, publication_year) VALUES
+                                                           ('Война и мир', 1, 1869),
+                                                           ('Анна Каренина', 1, 1877),
+                                                           ('Преступление и наказание', 2, 1866),
+                                                           ('Идиот', 2, 1869),
+                                                           ('1984', 3, 1949),
+                                                           ('Скотный двор', 3, 1945),
+                                                           ('Мастер и Маргарита', 4, 1967),
+                                                           ('Собачье сердце', 4, 1925);
+
+INSERT INTO genres (name) VALUES
+                              ('Роман'), ('Антиутопия'), ('Сатира'), ('Философский роман');
 
 
-
-
-
-
-
+INSERT INTO book_genres (book_id, genre_id) VALUES
+                                                (1, 1), (1, 4),  -- Война и мир: Роман, Философский роман
+                                                (2, 1),           -- Анна Каренина: Роман
+                                                (3, 1), (3, 4),  -- Преступление и наказание: Роман, Философский роман
+                                                (4, 1),           -- Идиот: Роман
+                                                (5, 2), (5, 4),  -- 1984: Антиутопия, Философский роман
+                                                (6, 3),           -- Скотный двор: Сатира
+                                                (7, 1), (7, 4),  -- Мастер и Маргарита: Роман, Философский роман
+                                                (8, 3);           -- Собачье сердце: Сатира

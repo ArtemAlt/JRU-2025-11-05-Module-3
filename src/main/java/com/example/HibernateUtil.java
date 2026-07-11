@@ -2,6 +2,9 @@ package com.example;
 
 import com.example.entity.Passport;
 import com.example.entity.Student;
+import com.example.library.entity.Author;
+import com.example.library.entity.Book;
+import com.example.library.entity.Genre;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -15,6 +18,9 @@ public class HibernateUtil {
                     .configure("hibernate.cfg.xml")  // Загружаем конфигурацию из XML
                     .addAnnotatedClass(Student.class)
                     .addAnnotatedClass(Passport.class)
+                    .addAnnotatedClass(Genre.class)
+                    .addAnnotatedClass(Book.class)
+                    .addAnnotatedClass(Author.class)
                     .buildSessionFactory();
         } catch (Throwable ex) {
             System.err.println("Ошибка инициализации SessionFactory: " + ex);

@@ -23,5 +23,8 @@
         <!-- Регистрация entity-классов -->
         <mapping class="com.example.entity.Student"/>
         <mapping class="com.example.entity.Passport"/>
+        <mapping class="com.example.library.entity.Author"/>
+        <mapping class="com.example.library.entity.Book"/>
+        <mapping class="com.example.library.entity.Genre"/>
     </session-factory>
 </hibernate-configuration>
