@@ -1,6 +1,7 @@
 package com.example.library.entity;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,8 +24,11 @@ public class Author {
     private String country;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+            cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Book> books = new ArrayList<>();
+
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted = false;
 
     public Author() {
     }
@@ -32,6 +36,10 @@ public class Author {
     public Author(String name, String country) {
         this.name = name;
         this.country = country;
+    }
+
+    public void softDelete() {
+        deleted = true;
     }
 
     public Integer getId() {
