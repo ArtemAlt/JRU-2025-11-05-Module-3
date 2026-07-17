@@ -764,3 +764,93 @@ INSERT INTO book_genres (book_id, genre_id) VALUES
                                                 (6, 3),           -- Скотный двор: Сатира
                                                 (7, 1), (7, 4),  -- Мастер и Маргарита: Роман, Философский роман
                                                 (8, 3);           -- Собачье сердце: Сатира
+
+CREATE TABLE IF NOT EXISTS users (
+                                     id SERIAL PRIMARY KEY ,
+                                     name VARCHAR(100) NOT NULL,
+                                     email VARCHAR(100) UNIQUE,
+                                     age INTEGER,
+                                     status VARCHAR(20) DEFAULT 'ACTIVE',
+                                     is_active BOOLEAN DEFAULT TRUE,
+                                     is_verified integer DEFAULT 0,
+                                     birth_date DATE,
+                                     registration_time TIMESTAMP,
+                                     last_login_time TIME,
+                                     height INTEGER,
+                                     weight INTEGER,
+                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS employees (
+                                         id SERIAL PRIMARY KEY,
+                                         first_name VARCHAR(50),
+                                         last_name VARCHAR(50),
+                                         street VARCHAR(100),
+                                         city VARCHAR(50),
+                                         zip_code VARCHAR(20),
+                                         country VARCHAR(50),
+                                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS user_avatars (
+                                            id SERIAL PRIMARY KEY,
+                                            user_id INTEGER REFERENCES users(id),
+                                            avatar_data BYTEA,
+                                            file_name VARCHAR(100),
+                                            file_type VARCHAR(50),
+                                            uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS user_preferences (
+                                                id SERIAL PRIMARY KEY,
+                                                user_id INTEGER REFERENCES users(id),
+                                                preferences JSONB,
+                                                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- CREATE TABLE IF NOT EXISTS employees (
+--                                          id SERIAL PRIMARY KEY,
+--                                          first_name VARCHAR(50),
+--                                          last_name VARCHAR(50),
+--                                          street VARCHAR(100),
+--                                          city VARCHAR(50),
+--                                          zip_code VARCHAR(20),
+--                                          country VARCHAR(50),
+--                                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+
+CREATE TABLE IF NOT EXISTS employees (
+                                         id SERIAL PRIMARY KEY,
+                                         first_name VARCHAR(50),
+                                         last_name VARCHAR(50),
+                                         home_street VARCHAR(100),
+                                         home_city VARCHAR(50),
+                                         home_zip VARCHAR(20),
+                                         home_country VARCHAR(50),
+                                         work_street VARCHAR(100),
+                                         work_city VARCHAR(50),
+                                         work_zip VARCHAR(20),
+                                         work_country VARCHAR(50),
+                                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

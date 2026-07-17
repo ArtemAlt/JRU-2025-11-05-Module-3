@@ -3,10 +3,15 @@ package com.example;
 import com.example.library.entity.Author;
 import com.example.library.entity.Book;
 import com.example.library.entity.Genre;
+import com.example.users.User;
+import com.example.users.UserAvatar;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
@@ -78,11 +83,22 @@ public class Main {
 //            session.get(Author.class, author.getId());
 //            session.find(Author.class, author.getId());
 //            session.refresh(author);
-            author.softDelete();
-            session.persist(author);
+//            author.softDelete();
+//            session.persist(author);
+//
+//            session.getTransaction().commit();
+            byte[] data = Files.readAllBytes(Path.of(""));
+            User user = new User();
+            UserAvatar avatar = new UserAvatar();
+            avatar.setAvatarData(data);
+            avatar.setUser(user);
+            session.persist(avatar);
 
-            session.getTransaction().commit();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         System.out.println(author);
     }
+
+
 }
