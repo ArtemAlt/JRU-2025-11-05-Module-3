@@ -67,7 +67,7 @@ public class Main {
 //        System.out.println("Author: " + author);
 //        System.out.println("Books: " + author.getBooks().size());
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Author author = new Author("Александр Сергеевич Пушкин", "Российская Империя");
+//        Author author = new Author("Александр Сергеевич Пушкин", "Российская Империя");
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 //            author = session.get(Author.class, 6);
@@ -87,18 +87,25 @@ public class Main {
 //            session.persist(author);
 //
 //            session.getTransaction().commit();
-            byte[] data = Files.readAllBytes(Path.of(""));
-            User user = new User();
-            UserAvatar avatar = new UserAvatar();
-            avatar.setAvatarData(data);
-            avatar.setUser(user);
-            session.persist(avatar);
+//            byte[] data = Files.readAllBytes(Path.of(""));
+//            User user = new User();
+//            UserAvatar avatar = new UserAvatar();
+//            avatar.setAvatarData(data);
+//            avatar.setUser(user);
+//            session.persist(avatar);
+//            String hql = "SELECT DISTINCT u FROM NewUser u JOIN u.phones p WHERE p LIKE '%999%'";
+//              String hql = "SELECT u FROM NewUser WHERE KEY(u.addresses) = 'nome'";
+//            String hql = "SELECT a FROM Author a JOIN a.books b WHERE b.publication_year > 1900 group by a HAVING count(b) >3";
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+//            String hql = "Select r FROM Readers r " +
+//                    "JOIN r.borrowHistory rb " +
+//                    "JOIN rb.book b " +
+//                    "JOIN b.genres g " +
+//                    "WHERE g.name = 'Роман'";
+
+            String hql = "SELECT r.name FROM Reader " +
+                    "JOIN r.borrowHistory rb " +
+                    "WHERE rb.returnDate is null group by r having count(rb) > 2";
         }
-        System.out.println(author);
     }
-
-
 }

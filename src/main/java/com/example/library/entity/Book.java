@@ -11,9 +11,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,21 +27,33 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String title;
+
     @Column(name = "publication_year")
     private Integer publicationYear;
+
+    private String isbn;
+    private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private Author author;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_genres",
             joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn (name = "genre_id")
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-    private Set<Genre> genres= new HashSet<>();
+    private Set<Genre> genres = new HashSet<>();
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    private List<ReaderBook> readers = new ArrayList<>();
 
     public void addGenre(Genre genre) {
         genres.add(genre);

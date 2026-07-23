@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import java.util.ArrayList;
@@ -20,59 +21,19 @@ public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String name;
     private String country;
 
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "birth_year")
+    private Integer birthYear;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Book> books = new ArrayList<>();
 
-    @Column(name = "deleted", nullable = false)
-    private Boolean deleted = false;
-
-    public Author() {
-    }
-
-    public Author(String name, String country) {
-        this.name = name;
-        this.country = country;
-    }
-
-    public void softDelete() {
-        deleted = true;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
+    @OneToOne(mappedBy = "author", cascade = CascadeType.ALL)
+    private Passport passport;
 
 
     @Override

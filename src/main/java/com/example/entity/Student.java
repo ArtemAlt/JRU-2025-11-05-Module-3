@@ -1,16 +1,23 @@
 package com.example.entity;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
 @Table(name = "students")
@@ -32,8 +39,8 @@ public class Student {
     @Column(unique = true, length = 100)
     private String email;
 
-    @Column(length = 20)
-    private String phone;
+//    @Column(length = 20)
+//    private String phone;
 
     @Column(length = 50)
     private String city;
@@ -44,6 +51,15 @@ public class Student {
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Passport passport;
 
+    @ElementCollection
+    @CollectionTable(
+            name = "user_phone",
+            joinColumns = @JoinColumn (name = "user_id")
+    )
+    @Column(name = "phone")
+    @OrderColumn(name = "position")
+    private Set<String> phones = new HashSet<>();
+
     public Student() {
     }
 
@@ -52,7 +68,7 @@ public class Student {
         this.lastName = lastName;
         this.age = age;
         this.email = email;
-        this.phone = phone;
+//        this.phone = phone;
         this.city = city;
     }
 
@@ -96,13 +112,13 @@ public class Student {
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+//    public String getPhone() {
+//        return phone;
+//    }
+//
+//    public void setPhone(String phone) {
+//        this.phone = phone;
+//    }
 
     public String getCity() {
         return city;
@@ -128,7 +144,7 @@ public class Student {
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
+//                ", phone='" + phone + '\'' +
                 ", city='" + city + '\'' +
                 ", createdAt=" + createdAt +
                 '}';

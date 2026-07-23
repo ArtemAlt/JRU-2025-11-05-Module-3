@@ -26,5 +26,9 @@
         <mapping class="com.example.library.entity.Author"/>
         <mapping class="com.example.library.entity.Book"/>
         <mapping class="com.example.library.entity.Genre"/>
+        <mapping class="com.example.library.entity.Publisher"/>
+        <mapping class="com.example.library.entity.Passport"/>
+        <mapping class="com.example.library.entity.Reader"/>
+        <mapping class="com.example.library.entity.ReaderBook"/>
     </session-factory>
 </hibernate-configuration>
