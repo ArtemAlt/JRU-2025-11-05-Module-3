@@ -10,6 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +33,14 @@ public class Author {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, orphanRemoval = true)
+    @BatchSize(size = 100)
     private List<Book> books = new ArrayList<>();
 
     @OneToOne(mappedBy = "author", cascade = CascadeType.ALL)
     private Passport passport;
 
+    public Author() {
+    }
 
     @Override
     public String toString() {
@@ -55,5 +61,53 @@ public class Author {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, country);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public Integer getBirthYear() {
+        return birthYear;
+    }
+
+    public void setBirthYear(Integer birthYear) {
+        this.birthYear = birthYear;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    public Passport getPassport() {
+        return passport;
+    }
+
+    public void setPassport(Passport passport) {
+        this.passport = passport;
     }
 }

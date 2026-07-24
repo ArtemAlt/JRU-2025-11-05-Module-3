@@ -1,10 +1,12 @@
 package com.example;
 
-import com.example.entity.Passport;
-import com.example.entity.Student;
 import com.example.library.entity.Author;
 import com.example.library.entity.Book;
 import com.example.library.entity.Genre;
+import com.example.library.entity.Passport;
+import com.example.library.entity.Publisher;
+import com.example.library.entity.Reader;
+import com.example.library.entity.ReaderBook;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -16,11 +18,14 @@ public class HibernateUtil {
         try {
             return new Configuration()
                     .configure("hibernate.cfg.xml")  // Загружаем конфигурацию из XML
-                    .addAnnotatedClass(Student.class)
                     .addAnnotatedClass(Passport.class)
                     .addAnnotatedClass(Genre.class)
                     .addAnnotatedClass(Book.class)
                     .addAnnotatedClass(Author.class)
+                    .addAnnotatedClass(Book.class)
+                    .addAnnotatedClass(Publisher.class)
+                    .addAnnotatedClass(Reader.class)
+                    .addAnnotatedClass(ReaderBook.class)
                     .buildSessionFactory();
         } catch (Throwable ex) {
             System.err.println("Ошибка инициализации SessionFactory: " + ex);

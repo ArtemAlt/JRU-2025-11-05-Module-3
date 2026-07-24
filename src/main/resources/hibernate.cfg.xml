@@ -16,13 +16,13 @@
         <!-- Логирование SQL -->
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
+        <!-- hibernate.cfg.xml -->
+        <property name="hibernate.cache.use_query_cache">true</property>
 
         <!-- Автоматическое создание/обновление схемы -->
 <!--        <property name="hibernate.hbm2ddl.auto">validate</property>-->
 
         <!-- Регистрация entity-классов -->
-        <mapping class="com.example.entity.Student"/>
-        <mapping class="com.example.entity.Passport"/>
         <mapping class="com.example.library.entity.Author"/>
         <mapping class="com.example.library.entity.Book"/>
         <mapping class="com.example.library.entity.Genre"/>

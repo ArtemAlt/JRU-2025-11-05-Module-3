@@ -1006,3 +1006,4 @@ CREATE TABLE IF NOT EXISTS passports (
 );
 
 
+SELECT  a.name, b. title FROM authors a LEFT JOIN books b on a.id = b.author_id;
