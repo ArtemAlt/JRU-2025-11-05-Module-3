@@ -1,5 +1,14 @@
 package com.example;
 
+import com.example.inheritance.entity.base.PersonB;
+import com.example.inheritance.entity.base.StudentB;
+import com.example.inheritance.entity.base.TeacherB;
+import com.example.inheritance.entity.mapped.Person;
+import com.example.inheritance.entity.mapped.Student;
+import com.example.inheritance.entity.mapped.Teacher;
+import com.example.inheritance.entity.single.PersonS;
+import com.example.inheritance.entity.single.StudentS;
+import com.example.inheritance.entity.single.TeacherS;
 import com.example.library.entity.Author;
 import com.example.library.entity.Book;
 import com.example.library.entity.Genre;
@@ -26,6 +35,15 @@ public class HibernateUtil {
                     .addAnnotatedClass(Publisher.class)
                     .addAnnotatedClass(Reader.class)
                     .addAnnotatedClass(ReaderBook.class)
+                    .addAnnotatedClass(Person.class)
+                    .addAnnotatedClass(Teacher.class)
+                    .addAnnotatedClass(Student.class)
+                    .addAnnotatedClass(PersonS.class)
+                    .addAnnotatedClass(TeacherS.class)
+                    .addAnnotatedClass(StudentS.class)
+                    .addAnnotatedClass(StudentB.class)
+                    .addAnnotatedClass(PersonB.class)
+                    .addAnnotatedClass(TeacherB.class)
                     .buildSessionFactory();
         } catch (Throwable ex) {
             System.err.println("Ошибка инициализации SessionFactory: " + ex);

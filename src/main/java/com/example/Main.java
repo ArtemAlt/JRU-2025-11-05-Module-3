@@ -1,46 +1,58 @@
 package com.example;
 
-import com.example.library.entity.Author;
-import com.example.library.entity.Book;
+import com.example.inheritance.entity.base.PersonB;
+import com.example.inheritance.entity.base.StudentB;
+import com.example.inheritance.entity.base.TeacherB;
+import com.example.inheritance.entity.single.PersonS;
+import com.example.inheritance.entity.single.StudentS;
+import com.example.inheritance.entity.single.TeacherS;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import java.sql.SQLException;
 import java.util.List;
 
-
 public class Main {
-    public static void main(String[] args) throws SQLException {
-//        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-
-//        try (Session session = sessionFactory.openSession()) {
-//            List<Author> fromAuthor = session.createQuery("FROM Author", Author.class).list();
-//            for (Author author : fromAuthor) {
-//                System.out.println(author.getName() + ": "+ author.getBooks().size());
-//            }
-//        }
-//        - 15 запросов
-//        try (Session session = sessionFactory.openSession()) {
-//            String hql = "SELECT DISTINCT a FROM Author a LEFT JOIN FETCH a.books";
-//            List<Author> list = session.createQuery(hql, Author.class).list();
-//            for (Author author : list) {
-//                System.out.println(author + ": " + author.getBooks());
-//            }
-// - 7 запросов
-//        }
-//        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-//        try (Session session = sessionFactory.openSession()) {
-//            for (int i = 0; i < 50; i++) {
-//                Author author = session.get(Author.class, 1);
-//                System.out.println(i);
-//            }
-//        }
+    public static void main(String[] args) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        for (int i = 0; i < 50; i++) {
-            try (Session session = sessionFactory.openSession()) {
-                Author author = session.get(Author.class, 1);
+
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            // Создаём студента
+            StudentB studentS = new StudentB();
+            studentS.setName("Иван Петров");
+            studentS.setEmail("ivan@example.com");
+            studentS.setFaculty("Информатика");
+            studentS.setYearOfStudy(3);
+            studentS.setAverageGrade(4.5);
+
+            // Создаём преподавателя
+            TeacherB teacherS = new TeacherB();
+            teacherS.setName("Анна Смирнова");
+            teacherS.setEmail("anna@example.com");
+            teacherS.setDepartment("Математика");
+            teacherS.setDegree("Кандидат наук");
+            teacherS.setSalary(75000.0);
+
+            session.persist(studentS);
+            session.persist(teacherS);
+
+            session.getTransaction().commit();
+
+//            List<Student> fromStudent = session.createQuery("FROM Student", Student.class).list();
+//            List<Teacher> fromTeacher = session.createQuery("FROM Teacher", Teacher.class).list();
+
+//            for (Student s : fromStudent) {
+//                System.out.println(s.toString());
+//            }
+//            for (Teacher t : fromTeacher) {
+//                System.out.println(t.toString());
+//            }
+            List<PersonB> fromPersonS = session.createQuery("From PersonB ", PersonB.class).list();
+
+            for (PersonB personS : fromPersonS) {
+                System.out.println(personS.toString());
             }
-            System.out.println(i);
         }
     }
 }

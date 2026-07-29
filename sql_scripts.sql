@@ -110,8 +110,8 @@ CREATE TABLE students
 
 CREATE TABLE users_phone
 (
-    user_id INTEGER REFERENCES students (id),
-    phone varchar not null ,
+    user_id  INTEGER REFERENCES students (id),
+    phone    varchar not null,
     position integer not null default 0,
     CONSTRAINT unique_user_contact_phone UNIQUE (user_id, phone)
 );
@@ -419,8 +419,8 @@ ORDER BY e.grade DESC NULLS LAST;
  ORDER BY LIMIT
  */
 
-SELECT t.first_name || ' ' || t.last_name AS teacher,
-       s.first_name || ' ' || s.last_name AS student,
+SELECT t.first_name || ' ' || t.last_name AS teacherS,
+       s.first_name || ' ' || s.last_name AS studentS,
        c.title                            AS course,
        e.grade
 FROM teachers t
@@ -743,78 +743,89 @@ create table book_genres
 );
 
 -- Вставляем тестовые данные
-INSERT INTO authors (name, country) VALUES
-                                        ('Лев Толстой', 'Россия'),
-                                        ('Фёдор Достоевский', 'Россия'),
-                                        ('Джордж Оруэлл', 'Великобритания'),
-                                        ('Михаил Булгаков', 'Россия');
+INSERT INTO authors (name, country)
+VALUES ('Лев Толстой', 'Россия'),
+       ('Фёдор Достоевский', 'Россия'),
+       ('Джордж Оруэлл', 'Великобритания'),
+       ('Михаил Булгаков', 'Россия');
 
-INSERT INTO books (title, author_id, publication_year) VALUES
-                                                           ('Война и мир', 1, 1869),
-                                                           ('Анна Каренина', 1, 1877),
-                                                           ('Преступление и наказание', 2, 1866),
-                                                           ('Идиот', 2, 1869),
-                                                           ('1984', 3, 1949),
-                                                           ('Скотный двор', 3, 1945),
-                                                           ('Мастер и Маргарита', 4, 1967),
-                                                           ('Собачье сердце', 4, 1925);
+INSERT INTO books (title, author_id, publication_year)
+VALUES ('Война и мир', 1, 1869),
+       ('Анна Каренина', 1, 1877),
+       ('Преступление и наказание', 2, 1866),
+       ('Идиот', 2, 1869),
+       ('1984', 3, 1949),
+       ('Скотный двор', 3, 1945),
+       ('Мастер и Маргарита', 4, 1967),
+       ('Собачье сердце', 4, 1925);
 
-INSERT INTO genres (name) VALUES
-                              ('Роман'), ('Антиутопия'), ('Сатира'), ('Философский роман');
+INSERT INTO genres (name)
+VALUES ('Роман'),
+       ('Антиутопия'),
+       ('Сатира'),
+       ('Философский роман');
 
 
-INSERT INTO book_genres (book_id, genre_id) VALUES
-                                                (1, 1), (1, 4),  -- Война и мир: Роман, Философский роман
-                                                (2, 1),           -- Анна Каренина: Роман
-                                                (3, 1), (3, 4),  -- Преступление и наказание: Роман, Философский роман
-                                                (4, 1),           -- Идиот: Роман
-                                                (5, 2), (5, 4),  -- 1984: Антиутопия, Философский роман
-                                                (6, 3),           -- Скотный двор: Сатира
-                                                (7, 1), (7, 4),  -- Мастер и Маргарита: Роман, Философский роман
-                                                (8, 3);           -- Собачье сердце: Сатира
+INSERT INTO book_genres (book_id, genre_id)
+VALUES (1, 1),
+       (1, 4), -- Война и мир: Роман, Философский роман
+       (2, 1), -- Анна Каренина: Роман
+       (3, 1),
+       (3, 4), -- Преступление и наказание: Роман, Философский роман
+       (4, 1), -- Идиот: Роман
+       (5, 2),
+       (5, 4), -- 1984: Антиутопия, Философский роман
+       (6, 3), -- Скотный двор: Сатира
+       (7, 1),
+       (7, 4), -- Мастер и Маргарита: Роман, Философский роман
+       (8, 3); -- Собачье сердце: Сатира
 
-CREATE TABLE IF NOT EXISTS users (
-                                     id SERIAL PRIMARY KEY ,
-                                     name VARCHAR(100) NOT NULL,
-                                     email VARCHAR(100) UNIQUE,
-                                     age INTEGER,
-                                     status VARCHAR(20) DEFAULT 'ACTIVE',
-                                     is_active BOOLEAN DEFAULT TRUE,
-                                     is_verified integer DEFAULT 0,
-                                     birth_date DATE,
-                                     registration_time TIMESTAMP,
-                                     last_login_time TIME,
-                                     height INTEGER,
-                                     weight INTEGER,
-                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS users
+(
+    id                SERIAL PRIMARY KEY,
+    name              VARCHAR(100) NOT NULL,
+    email             VARCHAR(100) UNIQUE,
+    age               INTEGER,
+    status            VARCHAR(20) DEFAULT 'ACTIVE',
+    is_active         BOOLEAN     DEFAULT TRUE,
+    is_verified       integer     DEFAULT 0,
+    birth_date        DATE,
+    registration_time TIMESTAMP,
+    last_login_time   TIME,
+    height            INTEGER,
+    weight            INTEGER,
+    created_at        TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    updated_at        TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS employees (
-                                         id SERIAL PRIMARY KEY,
-                                         first_name VARCHAR(50),
-                                         last_name VARCHAR(50),
-                                         street VARCHAR(100),
-                                         city VARCHAR(50),
-                                         zip_code VARCHAR(20),
-                                         country VARCHAR(50),
-                                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS employees
+(
+    id         SERIAL PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name  VARCHAR(50),
+    street     VARCHAR(100),
+    city       VARCHAR(50),
+    zip_code   VARCHAR(20),
+    country    VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS user_avatars (
-                                            id SERIAL PRIMARY KEY,
-                                            user_id INTEGER REFERENCES users(id),
-                                            avatar_data BYTEA,
-                                            file_name VARCHAR(100),
-                                            file_type VARCHAR(50),
-                                            uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS user_avatars
+(
+    id          SERIAL PRIMARY KEY,
+    user_id     INTEGER REFERENCES users (id),
+    avatar_data BYTEA,
+    file_name   VARCHAR(100),
+    file_type   VARCHAR(50),
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS user_preferences (
-                                                id SERIAL PRIMARY KEY,
-                                                user_id INTEGER REFERENCES users(id),
-                                                preferences JSONB,
-                                                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS user_preferences
+(
+    id          SERIAL PRIMARY KEY,
+    user_id     INTEGER REFERENCES users (id),
+    preferences JSONB,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -830,180 +841,283 @@ CREATE TABLE IF NOT EXISTS user_preferences (
 -- );
 
 
-CREATE TABLE IF NOT EXISTS employees (
-                                         id SERIAL PRIMARY KEY,
-                                         first_name VARCHAR(50),
-                                         last_name VARCHAR(50),
-                                         home_street VARCHAR(100),
-                                         home_city VARCHAR(50),
-                                         home_zip VARCHAR(20),
-                                         home_country VARCHAR(50),
-                                         work_street VARCHAR(100),
-                                         work_city VARCHAR(50),
-                                         work_zip VARCHAR(20),
-                                         work_country VARCHAR(50),
-                                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS employees
+(
+    id           SERIAL PRIMARY KEY,
+    first_name   VARCHAR(50),
+    last_name    VARCHAR(50),
+    home_street  VARCHAR(100),
+    home_city    VARCHAR(50),
+    home_zip     VARCHAR(20),
+    home_country VARCHAR(50),
+    work_street  VARCHAR(100),
+    work_city    VARCHAR(50),
+    work_zip     VARCHAR(20),
+    work_country VARCHAR(50),
+    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
 
 -- ===== ТАБЛИЦЫ ДЛЯ @ELEMENTCOLLECTION =====
 -- Таблица пользователей
-CREATE TABLE IF NOT EXISTS new_users (
-                                     id SERIAL PRIMARY KEY,
-                                     name VARCHAR(100) NOT NULL,
-                                     email VARCHAR(100) UNIQUE,
-                                     age INTEGER,
-                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS new_users
+(
+    id         SERIAL PRIMARY KEY,
+    name       VARCHAR(100) NOT NULL,
+    email      VARCHAR(100) UNIQUE,
+    age        INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Вспомогательная таблица для хранения телефонов (List/Set)
-CREATE TABLE IF NOT EXISTS new_users_phones (
-                                            user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-                                            phone VARCHAR(20) NOT NULL,
-                                            position INTEGER  -- для List (позиция в списке)
+CREATE TABLE IF NOT EXISTS new_users_phones
+(
+    user_id  INTEGER REFERENCES users (id) ON DELETE CASCADE,
+    phone    VARCHAR(20) NOT NULL,
+    position INTEGER -- для List (позиция в списке)
 );
 
 -- Вспомогательная таблица для хранения адресов (Map)
-CREATE TABLE IF NOT EXISTS new_users_addresses (
-                                               user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-                                               address_key VARCHAR(50) NOT NULL,  -- ключ для Map (например, "home", "work")
-                                               address_value VARCHAR(200) NOT NULL
+CREATE TABLE IF NOT EXISTS new_users_addresses
+(
+    user_id       INTEGER REFERENCES users (id) ON DELETE CASCADE,
+    address_key   VARCHAR(50)  NOT NULL, -- ключ для Map (например, "home", "work")
+    address_value VARCHAR(200) NOT NULL
 );
 
 -- Вспомогательная таблица для хранения социальных сетей (Set)
-CREATE TABLE IF NOT EXISTS new_users_social (
-                                            user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-                                            social_network VARCHAR(50) NOT NULL,
-                                            social_handle VARCHAR(100) NOT NULL,
-                                            UNIQUE (user_id, social_network)
+CREATE TABLE IF NOT EXISTS new_users_social
+(
+    user_id        INTEGER REFERENCES users (id) ON DELETE CASCADE,
+    social_network VARCHAR(50)  NOT NULL,
+    social_handle  VARCHAR(100) NOT NULL,
+    UNIQUE (user_id, social_network)
 );
 ----------------------------------
-CREATE TABLE IF NOT EXISTS genres (
-                                      id SERIAL PRIMARY KEY,
-                                      name VARCHAR(50) NOT NULL UNIQUE,
-                                      description TEXT
+CREATE TABLE IF NOT EXISTS genres
+(
+    id          SERIAL PRIMARY KEY,
+    name        VARCHAR(50) NOT NULL UNIQUE,
+    description TEXT
 );
 
-CREATE TABLE IF NOT EXISTS authors (
-                                       id SERIAL PRIMARY KEY,
-                                       name VARCHAR(100) NOT NULL,
-                                       country VARCHAR(50),
-                                       birth_year INTEGER
+CREATE TABLE IF NOT EXISTS authors
+(
+    id         SERIAL PRIMARY KEY,
+    name       VARCHAR(100) NOT NULL,
+    country    VARCHAR(50),
+    birth_year INTEGER
 );
-CREATE TABLE IF NOT EXISTS publishers (
-                                          id SERIAL PRIMARY KEY,
-                                          name VARCHAR(100) NOT NULL,
-                                          address TEXT,
-                                          founded_year INTEGER
-);
-
-CREATE TABLE IF NOT EXISTS books (
-                                     id SERIAL PRIMARY KEY,
-                                     title VARCHAR(200) NOT NULL,
-                                     author_id INTEGER REFERENCES authors(id),
-                                     publication_year INTEGER,
-                                     isbn VARCHAR(20) UNIQUE,
-                                     price DECIMAL(10, 2),
-                                     publisher_id INTEGER REFERENCES publishers(id)
+CREATE TABLE IF NOT EXISTS publishers
+(
+    id           SERIAL PRIMARY KEY,
+    name         VARCHAR(100) NOT NULL,
+    address      TEXT,
+    founded_year INTEGER
 );
 
-CREATE TABLE IF NOT EXISTS book_genres (
-                                           book_id INTEGER REFERENCES books(id) ON DELETE CASCADE,
-                                           genre_id INTEGER REFERENCES genres(id) ON DELETE CASCADE,
-                                           PRIMARY KEY (book_id, genre_id)
+CREATE TABLE IF NOT EXISTS books
+(
+    id               SERIAL PRIMARY KEY,
+    title            VARCHAR(200) NOT NULL,
+    author_id        INTEGER REFERENCES authors (id),
+    publication_year INTEGER,
+    isbn             VARCHAR(20) UNIQUE,
+    price            DECIMAL(10, 2),
+    publisher_id     INTEGER REFERENCES publishers (id)
 );
 
-CREATE TABLE IF NOT EXISTS readers (
-                                       id SERIAL PRIMARY KEY,
-                                       name VARCHAR(100) NOT NULL,
-                                       email VARCHAR(100) UNIQUE
+CREATE TABLE IF NOT EXISTS book_genres
+(
+    book_id  INTEGER REFERENCES books (id) ON DELETE CASCADE,
+    genre_id INTEGER REFERENCES genres (id) ON DELETE CASCADE,
+    PRIMARY KEY (book_id, genre_id)
 );
 
-CREATE TABLE IF NOT EXISTS reader_books (
-                                            reader_id INTEGER REFERENCES readers(id) ON DELETE CASCADE,
-                                            book_id INTEGER REFERENCES books(id) ON DELETE CASCADE,
-                                            borrowed_date DATE DEFAULT CURRENT_DATE,
-                                            return_date DATE,
-                                            PRIMARY KEY (reader_id, book_id)
+CREATE TABLE IF NOT EXISTS readers
+(
+    id    SERIAL PRIMARY KEY,
+    name  VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE
 );
 
-
-
-
-
-INSERT INTO authors (name, country, birth_year) VALUES
-                                                    ('Лев Толстой', 'Россия', 1828),
-                                                    ('Фёдор Достоевский', 'Россия', 1821),
-                                                    ('Джордж Оруэлл', 'Великобритания', 1903),
-                                                    ('Михаил Булгаков', 'Россия', 1891),
-                                                    ('Антон Чехов', 'Россия', 1860),
-                                                    ('Джейн Остин', 'Великобритания', 1775),
-                                                    ('Эрнест Хемингуэй', 'США', 1899);
-
-INSERT INTO books (title, author_id, publication_year, isbn, price) VALUES
-                                                                        ('Война и мир', 1, 1869, '978-5-699-12345-6', 750.00),
-                                                                        ('Анна Каренина', 1, 1877, '978-5-699-23456-7', 650.00),
-                                                                        ('Преступление и наказание', 2, 1866, '978-5-699-34567-8', 550.00),
-                                                                        ('Идиот', 2, 1869, '978-5-699-45678-9', 500.00),
-                                                                        ('1984', 3, 1949, '978-5-699-56789-0', 450.00),
-                                                                        ('Скотный двор', 3, 1945, '978-5-699-67890-1', 350.00),
-                                                                        ('Мастер и Маргарита', 4, 1967, '978-5-699-78901-2', 600.00),
-                                                                        ('Собачье сердце', 4, 1925, '978-5-699-89012-3', 400.00),
-                                                                        ('Чайка', 5, 1895, '978-5-699-90123-4', 300.00),
-                                                                        ('Гордость и предубеждение', 6, 1813, '978-5-699-01234-5', 480.00),
-                                                                        ('Старик и море', 7, 1952, '978-5-699-12345-9', 380.00);
-
-INSERT INTO genres (name, description) VALUES
-                                           ('Роман', 'Крупное эпическое произведение'),
-                                           ('Антиутопия', 'Изображение тоталитарного общества'),
-                                           ('Сатира', 'Осмеяние пороков общества'),
-                                           ('Философский роман', 'Осмысление бытийных вопросов'),
-                                           ('Приключения', 'Путешествия и опасности'),
-                                           ('Драма', 'Конфликтные и эмоциональные произведения');
-
-INSERT INTO book_genres (book_id, genre_id) VALUES
-                                                (1, 1), (1, 4),
-                                                (2, 1),
-                                                (3, 1), (3, 4),
-                                                (4, 1),
-                                                (5, 2), (5, 4),
-                                                (6, 3),
-                                                (7, 1), (7, 4),
-                                                (8, 3),
-                                                (10, 1);
-
-INSERT INTO publishers (name, address, founded_year) VALUES
-                                                         ('Эксмо', 'г. Москва, ул. Пушкина, д. 10', 1991),
-                                                         ('АСТ', 'г. Москва, ул. Ленина, д. 5', 1992),
-                                                         ('Оксфорд Юниверсити Пресс', 'Великобритания, Оксфорд', 1478);
-
-UPDATE books SET publisher_id = 1 WHERE id IN (1, 2, 3, 4, 7, 8);
-UPDATE books SET publisher_id = 2 WHERE id IN (5, 6, 9);
-UPDATE books SET publisher_id = 3 WHERE id IN (10, 11);
-
-INSERT INTO readers (name, email) VALUES
-                                      ('Иван Читатель', 'ivan.reader@example.com'),
-                                      ('Мария Книголюб', 'maria.reader@example.com'),
-                                      ('Петр Библиофил', 'petr.reader@example.com');
-
-INSERT INTO reader_books (reader_id, book_id, borrowed_date, return_date) VALUES
-                                                                              (1, 1, '2024-01-15', '2024-02-15'),
-                                                                              (1, 2, '2024-01-20', NULL),  -- ещё не вернул
-                                                                              (1, 5, '2024-02-01', '2024-02-28'),
-                                                                              (2, 3, '2024-01-10', '2024-02-10'),
-                                                                              (2, 7, '2024-02-01', NULL),  -- ещё не вернул
-                                                                              (3, 4, '2024-01-05', '2024-01-30'),
-                                                                              (3, 6, '2024-02-10', '2024-03-10');
-
-CREATE TABLE IF NOT EXISTS passports (
-                                         id SERIAL PRIMARY KEY,
-                                         author_id INTEGER UNIQUE REFERENCES authors(id) ON DELETE CASCADE,
-                                         series VARCHAR(10) NOT NULL,
-                                         number VARCHAR(20) NOT NULL,
-                                         issued_at DATE,
-                                         expires_at DATE
+CREATE TABLE IF NOT EXISTS reader_books
+(
+    reader_id     INTEGER REFERENCES readers (id) ON DELETE CASCADE,
+    book_id       INTEGER REFERENCES books (id) ON DELETE CASCADE,
+    borrowed_date DATE DEFAULT CURRENT_DATE,
+    return_date   DATE,
+    PRIMARY KEY (reader_id, book_id)
 );
 
 
-SELECT  a.name, b. title FROM authors a LEFT JOIN books b on a.id = b.author_id;
+
+INSERT INTO authors (name, country, birth_year)
+VALUES ('Лев Толстой', 'Россия', 1828),
+       ('Фёдор Достоевский', 'Россия', 1821),
+       ('Джордж Оруэлл', 'Великобритания', 1903),
+       ('Михаил Булгаков', 'Россия', 1891),
+       ('Антон Чехов', 'Россия', 1860),
+       ('Джейн Остин', 'Великобритания', 1775),
+       ('Эрнест Хемингуэй', 'США', 1899);
+
+INSERT INTO books (title, author_id, publication_year, isbn, price)
+VALUES ('Война и мир', 1, 1869, '978-5-699-12345-6', 750.00),
+       ('Анна Каренина', 1, 1877, '978-5-699-23456-7', 650.00),
+       ('Преступление и наказание', 2, 1866, '978-5-699-34567-8', 550.00),
+       ('Идиот', 2, 1869, '978-5-699-45678-9', 500.00),
+       ('1984', 3, 1949, '978-5-699-56789-0', 450.00),
+       ('Скотный двор', 3, 1945, '978-5-699-67890-1', 350.00),
+       ('Мастер и Маргарита', 4, 1967, '978-5-699-78901-2', 600.00),
+       ('Собачье сердце', 4, 1925, '978-5-699-89012-3', 400.00),
+       ('Чайка', 5, 1895, '978-5-699-90123-4', 300.00),
+       ('Гордость и предубеждение', 6, 1813, '978-5-699-01234-5', 480.00),
+       ('Старик и море', 7, 1952, '978-5-699-12345-9', 380.00);
+
+INSERT INTO genres (name, description)
+VALUES ('Роман', 'Крупное эпическое произведение'),
+       ('Антиутопия', 'Изображение тоталитарного общества'),
+       ('Сатира', 'Осмеяние пороков общества'),
+       ('Философский роман', 'Осмысление бытийных вопросов'),
+       ('Приключения', 'Путешествия и опасности'),
+       ('Драма', 'Конфликтные и эмоциональные произведения');
+
+INSERT INTO book_genres (book_id, genre_id)
+VALUES (1, 1),
+       (1, 4),
+       (2, 1),
+       (3, 1),
+       (3, 4),
+       (4, 1),
+       (5, 2),
+       (5, 4),
+       (6, 3),
+       (7, 1),
+       (7, 4),
+       (8, 3),
+       (10, 1);
+
+INSERT INTO publishers (name, address, founded_year)
+VALUES ('Эксмо', 'г. Москва, ул. Пушкина, д. 10', 1991),
+       ('АСТ', 'г. Москва, ул. Ленина, д. 5', 1992),
+       ('Оксфорд Юниверсити Пресс', 'Великобритания, Оксфорд', 1478);
+
+UPDATE books
+SET publisher_id = 1
+WHERE id IN (1, 2, 3, 4, 7, 8);
+UPDATE books
+SET publisher_id = 2
+WHERE id IN (5, 6, 9);
+UPDATE books
+SET publisher_id = 3
+WHERE id IN (10, 11);
+
+INSERT INTO readers (name, email)
+VALUES ('Иван Читатель', 'ivan.reader@example.com'),
+       ('Мария Книголюб', 'maria.reader@example.com'),
+       ('Петр Библиофил', 'petr.reader@example.com');
+
+INSERT INTO reader_books (reader_id, book_id, borrowed_date, return_date)
+VALUES (1, 1, '2024-01-15', '2024-02-15'),
+       (1, 2, '2024-01-20', NULL), -- ещё не вернул
+       (1, 5, '2024-02-01', '2024-02-28'),
+       (2, 3, '2024-01-10', '2024-02-10'),
+       (2, 7, '2024-02-01', NULL), -- ещё не вернул
+       (3, 4, '2024-01-05', '2024-01-30'),
+       (3, 6, '2024-02-10', '2024-03-10');
+
+CREATE TABLE IF NOT EXISTS passports
+(
+    id         SERIAL PRIMARY KEY,
+    author_id  INTEGER UNIQUE REFERENCES authors (id) ON DELETE CASCADE,
+    series     VARCHAR(10) NOT NULL,
+    number     VARCHAR(20) NOT NULL,
+    issued_at  DATE,
+    expires_at DATE
+);
+
+
+SELECT a.name, b.title
+FROM authors a
+         LEFT JOIN books b on a.id = b.author_id;
+
+CREATE TABLE students
+(
+    id            SERIAL PRIMARY KEY,
+    name          VARCHAR(100) NOT NULL,
+    email         VARCHAR(100) UNIQUE,
+    faculty       VARCHAR(50),
+    year_of_study INTEGER,
+    average_grade DECIMAL(3, 2)
+);
+
+CREATE TABLE teachers
+(
+    id         SERIAL PRIMARY KEY,
+    name       VARCHAR(100) NOT NULL,
+    email      VARCHAR(100) UNIQUE,
+    department VARCHAR(50),
+    degree     VARCHAR(50),
+    salary     DECIMAL(10, 2)
+);
+
+CREATE TABLE persons
+(
+    id            SERIAL PRIMARY KEY,
+    dtype         VARCHAR(50)  NOT NULL,
+    name          VARCHAR(100) NOT NULL,
+    email         VARCHAR(100) UNIQUE,
+    -- Поля для Student
+    faculty       VARCHAR(50),
+    year_of_study INTEGER,
+    average_grade DECIMAL(3, 2),
+    -- Поля для Teacher
+    department    VARCHAR(50),
+    degree        VARCHAR(50),
+    salary        DECIMAL(10, 2)
+);
+
+CREATE TABLE persons_base (
+                              id SERIAL PRIMARY KEY,
+                              name VARCHAR(100) NOT NULL,
+                              email VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE students_joined (
+                                 id INTEGER PRIMARY KEY REFERENCES persons_base(id),
+                                 faculty VARCHAR(50),
+                                 year_of_study INTEGER,
+                                 average_grade DECIMAL(3, 2)
+);
+
+CREATE TABLE teachers_joined (
+                                 id INTEGER PRIMARY KEY REFERENCES persons_base(id),
+                                 department VARCHAR(50),
+                                 degree VARCHAR(50),
+                                 salary DECIMAL(10, 2)
+);
+
+CREATE TABLE persons_tpc (
+                             id SERIAL PRIMARY KEY,
+                             name VARCHAR(100) NOT NULL,
+                             email VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE students_tpc (
+                              id SERIAL PRIMARY KEY,
+                              name VARCHAR(100) NOT NULL,
+                              email VARCHAR(100) UNIQUE,
+                              faculty VARCHAR(50),
+                              year_of_study INTEGER,
+                              average_grade DECIMAL(3, 2)
+);
+
+CREATE TABLE teachers_tpc (
+                              id SERIAL PRIMARY KEY,
+                              name VARCHAR(100) NOT NULL,
+                              email VARCHAR(100) UNIQUE,
+                              department VARCHAR(50),
+                              degree VARCHAR(50),
+                              salary DECIMAL(10, 2)
+);

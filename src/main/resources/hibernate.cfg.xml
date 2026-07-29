@@ -16,8 +16,6 @@
         <!-- Логирование SQL -->
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
-        <!-- hibernate.cfg.xml -->
-        <property name="hibernate.cache.use_query_cache">true</property>
 
         <!-- Автоматическое создание/обновление схемы -->
 <!--        <property name="hibernate.hbm2ddl.auto">validate</property>-->
@@ -30,5 +28,15 @@
         <mapping class="com.example.library.entity.Passport"/>
         <mapping class="com.example.library.entity.Reader"/>
         <mapping class="com.example.library.entity.ReaderBook"/>
+        <mapping class="com.example.inheritance.entity.mapped.Person"/>
+        <mapping class="com.example.inheritance.entity.mapped.Teacher"/>
+        <mapping class="com.example.inheritance.entity.mapped.Student"/>
+        <mapping class="com.example.inheritance.entity.single.PersonS"/>
+        <mapping class="com.example.inheritance.entity.single.StudentS"/>
+        <mapping class="com.example.inheritance.entity.single.TeacherS"/>
+        <mapping class="com.example.inheritance.entity.base.PersonB"/>
+        <mapping class="com.example.inheritance.entity.base.TeacherB"/>
+        <mapping class="com.example.inheritance.entity.base.StudentB"/>
+
     </session-factory>
 </hibernate-configuration>
