@@ -1121,3 +1121,5 @@ CREATE TABLE teachers_tpc (
                               degree VARCHAR(50),
                               salary DECIMAL(10, 2)
 );
+
+SELECT * from authors order by id desc , country asc ;

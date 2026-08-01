@@ -42,14 +42,7 @@ public class Author {
     public Author() {
     }
 
-    @Override
-    public String toString() {
-        return "Author{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", country='" + country + '\'' +
-                '}';
-    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -109,5 +102,15 @@ public class Author {
 
     public void setPassport(Passport passport) {
         this.passport = passport;
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", country='" + country + '\'' +
+                ", birthYear=" + birthYear +
+                '}';
     }
 }
