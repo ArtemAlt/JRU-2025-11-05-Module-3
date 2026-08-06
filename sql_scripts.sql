@@ -1123,3 +1123,6 @@ CREATE TABLE teachers_tpc (
 );
 
 SELECT * from authors order by id desc , country asc ;
+
+SELECT a.id, a.name, count(b.id) from authors a
+    left join books b on b.author_id = a.id group by a.id, a.name;
